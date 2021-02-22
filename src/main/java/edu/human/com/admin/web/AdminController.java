@@ -21,6 +21,8 @@ import edu.human.com.member.service.MemberService;
 import edu.human.com.util.CommonUtil;
 import edu.human.com.util.PageVO;
 import egovframework.com.cmm.LoginVO;
+import egovframework.com.cmm.service.EgovFileMngService;
+import egovframework.com.cmm.service.FileVO;
 import egovframework.com.cmm.util.EgovUserDetailsHelper;
 import egovframework.let.cop.bbs.service.BoardMasterVO;
 import egovframework.let.cop.bbs.service.BoardVO;
@@ -47,12 +49,19 @@ public class AdminController {
 	private EgovPropertyService propertyService;
 	@Autowired
 	private EgovBBSManageService bbsMngService;
+	@Autowired
+	private EgovFileMngService fileMngService;
 	
 	@RequestMapping("/admin/board/delete_board.do")
 	public String delete_board(BoardVO boardVO, RedirectAttributes rdat) throws Exception {
-		boardService.delete_board(boardVO.getNttId());
+		FileVO fileVO = new FileVO();
+		if(boardVO.getAtchFileId() !=null || !"".equals(boardVO.getAtchFileId()) ) {
+			fileVO.setAtchFileId(boardVO.getAtchFileId());
+			fileMngService.deleteAllFileInf(fileVO);
+		}
+		boardService.delete_board((int)boardVO.getNttId());
 		rdat.addFlashAttribute("msg", "삭제");
-		return "redirect:/admin/board/list_board.do";
+		return "redirect:/admin/board/list_board.do?bbsId="+boardVO.getBbsId();
 	}
 	
 	@RequestMapping("/admin/board/view_board.do")
