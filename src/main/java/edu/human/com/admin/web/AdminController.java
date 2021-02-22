@@ -17,6 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import edu.human.com.member.service.EmployerInfoVO;
 import edu.human.com.member.service.MemberService;
+import edu.human.com.util.CommonUtil;
 import edu.human.com.util.PageVO;
 import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.util.EgovUserDetailsHelper;
@@ -33,6 +34,8 @@ public class AdminController {
 	
 	@Inject
 	private MemberService memberService;
+	@Inject
+	private CommonUtil commUtil;
 	//스프링빈(new키워드만드는 오브젝트X) 오브젝트를 사용하는 방법 @Inject(자바8이상), @Autowired(많이사용), @Resource(자바7이하)
 	@Autowired
 	private EgovBBSAttributeManageService bbsAttrbService;
@@ -62,6 +65,8 @@ public class AdminController {
 		boardVO.setLastUpdusrId(user.getUniqId());
 		BoardVO vo = bbsMngService.selectBoardArticle(boardVO);
 
+		//시큐어코딩 시작(게시물 제목&내용에서 자바스크립트 코드의 '<>'태그를 특수문자로 바꿔서 실행하지 못하게 하는 코딩)
+		//egov는 저장할 때, 시큐어 코딩으로 저장하는 방식을 사용.시큐어 코딩 필요X
 		model.addAttribute("result", vo);
 
 		model.addAttribute("sessionUniqId", user.getUniqId());

@@ -9,12 +9,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">글상세보기</h1>
+            <h1 class="m-0">${brdMstrVO.bbsNm} 글상세보기</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">글상세보기</li>
+              <li class="breadcrumb-item active">${brdMstrVO.bbsNm} 글상세보기</li>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
@@ -35,23 +35,22 @@
               <!-- /.card-header -->
               <div class="card-body">
                 <strong><i class="fas fa-book mr-1"></i> title</strong>
-                <p class="text-muted">첫번째 게시물 제목</p>
+                <p class="text-muted">${result.nttSj}</p>
 
                 <hr><!-- horizontal 수평선 태그 -->
                 <strong><i class="fas fa-map-marker-alt mr-1"></i> content</strong>
                 <p class="text-muted">
-                	첫번째 게시물 내용<br>
-                	줄바꿈 테스트
+                	${result.nttCn}
                 </p>
 				<!-- 부트스트랩 오른쪽여백주기클래스명mr-1:(margin-right: .25rem!important;) -->
                 <hr>
                 <strong><i class="fas fa-pencil-alt mr-1"></i> 작성자</strong>
-                <p class="text-muted">admin</p>
-                
-                <hr>
-                <strong><i class="far fa-save mr-1"></i> 첨부파일</strong>
-                <p class="text-muted"><a href="#">파일다운로드</a></p>
-                
+                <p class="text-muted">${result.ntcrId}</p>
+                <c:if test="${not empty result.atchFileId}">
+	                <hr>
+	                <strong><i class="far fa-save mr-1"></i> 첨부파일</strong>
+	                <p class="text-muted"><a href="#">파일다운로드</a></p>
+                </c:if>
               </div>
               <!-- /.card-body -->
             </div>
