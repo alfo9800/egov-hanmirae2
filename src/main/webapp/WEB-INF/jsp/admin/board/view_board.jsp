@@ -89,7 +89,7 @@
 $(document).ready(function(){
 	var action_form = $("form[name='frm']");
 	$("#btn_list").on("click",function(){
-		action_from.submit();
+		action_form.submit();
 	});
 	$("#btn_delete").on("click",function(){
 		if(confirm("정말로 삭제하시겠습니까?")) {
