@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import edu.human.com.board.service.BoardService;
 import edu.human.com.member.service.EmployerInfoVO;
 import edu.human.com.member.service.MemberService;
 import edu.human.com.util.CommonUtil;
@@ -36,13 +37,23 @@ public class AdminController {
 	private MemberService memberService;
 	@Inject
 	private CommonUtil commUtil;
+	@Inject
+	private BoardService boardService;
 	//스프링빈(new키워드만드는 오브젝트X) 오브젝트를 사용하는 방법 @Inject(자바8이상), @Autowired(많이사용), @Resource(자바7이하)
+	
 	@Autowired
 	private EgovBBSAttributeManageService bbsAttrbService;
 	@Autowired
 	private EgovPropertyService propertyService;
 	@Autowired
 	private EgovBBSManageService bbsMngService;
+	
+	@RequestMapping("/admin/board/delete_board.do")
+	public String delete_board(BoardVO boardVO, RedirectAttributes rdat) throws Exception {
+		boardService.delete_board(boardVO.getNttId());
+		rdat.addFlashAttribute("msg", "삭제");
+		return "redirect:/admin/board/list_board.do";
+	}
 	
 	@RequestMapping("/admin/board/view_board.do")
 	public String view_board(@ModelAttribute("searchVO") BoardVO boardVO, ModelMap model) throws Exception {
