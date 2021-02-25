@@ -16,6 +16,9 @@ public class CommonUtil {
 	@Inject
 	private MemberService memberService;
 	
+	//첨부파일 삭제 메서드
+	
+	
 	 /**
      * XSS 방지 처리. 자바스크립트 코드를 실행하지 못하는 특수문자로 replace하는 내용
      * 접근권한 protected 현재클래스(패키지)
