@@ -52,7 +52,6 @@ public class AdminController {
 	@Inject
 	private BoardService boardService;
 	//스프링빈(new키워드만드는 오브젝트X) 오브젝트를 사용하는 방법 @Inject(자바8이상), @Autowired(많이사용), @Resource(자바7이하)
-	
 	@Autowired
 	private EgovBBSAttributeManageService bbsAttrbService;
 	@Autowired
@@ -67,8 +66,6 @@ public class AdminController {
 	private DefaultBeanValidator beanValidator;
 	@Autowired
 	private EgovFileMngUtil fileUtil;
-	
-	//=========================================================================================================================
 	
 	//게시물 수정 처리 호출 POST
 	@RequestMapping("/admin/board/update_board.do")
@@ -132,18 +129,16 @@ public class AdminController {
 		    //게시물 업데이트 레코드 처리(아래)
 		    bbsMngService.updateBoardArticle(board);
 		}
-
+		
 		return "redirect:/admin/board/list_board.do?bbsId="+board.getBbsId();
 	}
-	
-	//게시물 수정화면을 호출 post
-	
-	@RequestMapping("/admin/board/update_board.do")
+	//게시물 수정 화면을 호출 POST
+	@RequestMapping("/admin/board/update_board_form.do")
 	public String update_board(@ModelAttribute("searchVO") BoardVO boardVO, @ModelAttribute("board") BoardVO vo, ModelMap model)
 		    throws Exception {
 
-		//로그인체크(로그인 되지 않으면 로그인화면으로 가도록)
-		if(!boardVO.getBbsId().equals("BBSMSTR_BBBBBBBBBBBB") && !EgovUserDetailsHelper.isAuthenticated()) {
+		// 로그인체크(로그인 되지 않았으면 로그인페이지로 이동처리)
+		if(!EgovUserDetailsHelper.isAuthenticated()) {
 			model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
 	    	return "cmm/uat/uia/EgovLoginUsr";
 		}
@@ -167,16 +162,16 @@ public class AdminController {
 		    bdvo = bbsMngService.selectBoardArticle(boardVO);
 		}
 
-		model.addAttribute("result", bdvo); //게시물 정보 오브젝트(게시물제목, 내용, 첨부파일id..)
-		model.addAttribute("bdMstr", bmvo); //게시판 정보 오브젝트(게시판명, 게시판id..)
+		model.addAttribute("result", bdvo);//게시물 정보 오브젝트(게시물제목,내용,첨부파일id...)
+		model.addAttribute("bdMstr", bmvo);//게시판 정보 오브젝트(게시판명,게시판id...)
 
 		//----------------------------
-		// 기본 BBS template 지정 / 게시판ID별로 필요한 디자인css파일을 변경 시켜줌.
+		// 기본 BBS template 지정 게시판ID별로 필요한 디자인css파일을 변경 시켜줍니다.
 		//----------------------------
 		if (bmvo.getTmplatCours() == null || bmvo.getTmplatCours().equals("")) {
 		    bmvo.setTmplatCours("/css/egovframework/cop/bbs/egovBaseTemplate.css");
 		}
-		model.addAttribute("brdMstrVO", bmvo); //위에서 정의한 dbMstr 모델과 같음. 두 사람이상이 만들면..
+		model.addAttribute("brdMstrVO", bmvo);//위에서 정의한 bdMstr 모델과 같음.2사람이상이 만들어서 나오는현상
 		////-----------------------------
 		return "admin/board/update_board";
 	}
@@ -184,30 +179,24 @@ public class AdminController {
 	@RequestMapping("/admin/board/delete_board.do")
 	public String delete_board(FileVO fileVO, BoardVO boardVO, RedirectAttributes rdat) throws Exception {
 		//FileVO fileVO = new FileVO();
-		if(boardVO.getAtchFileId() !=null && !"".equals(boardVO.getAtchFileId()) ) {
-			System.out.println("디버그:첨부파일ID"+boardVO.getAtchFileId());
+		if(boardVO.getAtchFileId()!=null && !"".equals(boardVO.getAtchFileId()) ) {
+			System.out.println("디버그:첨부파일ID "+boardVO.getAtchFileId());
 			//fileVO.setAtchFileId(boardVO.getAtchFileId());
-			//fileMngService.deleteAllFileInf(fileVO); //USE_AT='N' 삭제X
-			
-			//물리파일 지우려면 2가지 값 필수: file_stre_cours, stre_file_nm
-			//실제 폴더에서 파일도 삭제
-			if(fileVO.getAtchFileId() !=null && fileVO.getAtchFileId() !="") {
+			//fileMngService.deleteAllFileInf(fileVO);//USE_AT='N'삭제X
+			//물리파일지우려면 2가지값 필수: file_stre_cours, stre_file_nm
+			//실제 폴더에서 파일도 삭제(아래)
+			if(fileVO.getAtchFileId() !=null && fileVO.getAtchFileId() != "") {
 				FileVO delfileVO = fileMngService.selectFileInf(fileVO);
-				File target = new File(delfileVO.getFileStreCours(),delfileVO.getStreFileNm());
+				File target = new File(delfileVO.getFileStreCours(), delfileVO.getStreFileNm());
 				if(target.exists()) {
-					target.delete(); //폴더에서 기존 첨부파일 지우기
+					target.delete();//폴더에서 기존첨부파일 지우기
 					System.out.println("디버그:첨부파일삭제OK");
 				}
 			}
-			//첨부파일 레코드 삭제
-			
-			
-			boardService.delete_attach(boardVO.getAtchFileId());  //게시물에 딸린 첨부파일테이블 2개 레코드 삭제
-			System.out.println("디버그:첨부파일삭제 OK");
+			//첨부파일 레코드삭제(아래)
+			boardService.delete_attach(boardVO.getAtchFileId());//게시물에 딸린 첨부파일테이블 2개 레코드삭제
 		}
-		
-		//게시물 레코드 삭제
-		
+		//게시물 레코드삭제(아래)
 		boardService.delete_board((int)boardVO.getNttId());
 		rdat.addFlashAttribute("msg", "삭제");
 		return "redirect:/admin/board/list_board.do?bbsId="+boardVO.getBbsId();
@@ -233,11 +222,14 @@ public class AdminController {
 
 		boardVO.setLastUpdusrId(user.getUniqId());
 		BoardVO vo = bbsMngService.selectBoardArticle(boardVO);
-
-		//시큐어코딩 시작(게시물 제목&내용에서 자바스크립트 코드의 '<>'태그를 특수문자로 바꿔서 실행하지 못하게 하는 코딩)
-		//egov는 저장할 때, 시큐어 코딩으로 저장하는 방식을 사용.시큐어 코딩 필요X
+		//시큐어코딩 시작(게시물제목/내용에서 자바스크립트 코드의 꺽쇠태그를 특수문자로 바꿔서 실행하지 못하는 코드로 변경)
+		//egov 저장할때, 시큐어코딩으로 저장하는 방식을 사용, 문제있음. 우리방식으로 적용
+		String subject = commUtil.unscript(vo.getNttSj());//게시물제목
+		String content = commUtil.unscript(vo.getNttCn());//개시물내용
+		vo.setNttSj(subject);
+		vo.setNttCn(content);
 		model.addAttribute("result", vo);
-
+		
 		model.addAttribute("sessionUniqId", user.getUniqId());
 
 		//----------------------------
@@ -258,7 +250,6 @@ public class AdminController {
 		
 		return "admin/board/view_board";
 	}
-	
 	@RequestMapping("/admin/board/list_board.do")
 	public String list_board(@ModelAttribute("searchVO") BoardVO boardVO, ModelMap model) throws Exception {
 		LoginVO user = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
