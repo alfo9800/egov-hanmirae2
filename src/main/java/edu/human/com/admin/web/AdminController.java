@@ -132,8 +132,18 @@ public class AdminController {
 		    bbsMngService.updateBoardArticle(board);
 		}
 		
-		return "redirect:/admin/board/list_board.do?bbsId="+board.getBbsId();
+	    BoardVO bdvo = new BoardVO();	
+	    bdvo = bbsMngService.selectBoardArticle(boardVO);
+
+		
+		return "redirect:/admin/board/view_board.do?bbsId="+bdvo.getBbsId()
+		+"&nttId="+bdvo.getNttId()+"&bbsTyCode="+bdvo.getBbsTyCode()
+		+"&bbsAttrbCode="+bdvo.getBbsAttrbCode()+"&authFlag=Y"
+		+"&pageIndex="+bdvo.getPageIndex();
+		 
+		//return "redirect:/admin/board/list_board.do?bbsId="+board.getBbsId();
 	}
+	
 	//게시물 수정 화면을 호출 POST
 	@RequestMapping("/admin/board/update_board_form.do")
 	public String update_board(@ModelAttribute("searchVO") BoardVO boardVO, @ModelAttribute("board") BoardVO vo, ModelMap model)
@@ -186,7 +196,8 @@ public class AdminController {
 			//fileVO.setAtchFileId(boardVO.getAtchFileId());
 			//fileMngService.deleteAllFileInf(fileVO);//USE_AT='N'삭제X
 			//물리파일지우려면 2가지값 필수: file_stre_cours, stre_file_nm
-			//실제 폴더에서 파일도 삭제(아래)
+			
+			//실제 폴더에서 파일도 삭제
 			if(fileVO.getAtchFileId() !=null && fileVO.getAtchFileId() != "") {
 				List<FileVO> fileList = fileMngService.selectFileInfs(fileVO);
 				for(FileVO delfileVO:fileList) {
@@ -197,10 +208,10 @@ public class AdminController {
 					}	
 				}
 			}
-			//첨부파일 레코드삭제(아래)
+			//첨부파일 레코드삭제
 			boardService.delete_attach(boardVO.getAtchFileId());//게시물에 딸린 첨부파일테이블 2개 레코드삭제
 		}
-		//게시물 레코드삭제(아래)
+		//게시물 레코드삭제
 		boardService.delete_board((int)boardVO.getNttId());
 		rdat.addFlashAttribute("msg", "삭제");
 		return "redirect:/admin/board/list_board.do?bbsId="+boardVO.getBbsId();
@@ -229,7 +240,7 @@ public class AdminController {
 		//시큐어코딩 시작(게시물제목/내용에서 자바스크립트 코드의 꺽쇠태그를 특수문자로 바꿔서 실행하지 못하는 코드로 변경)
 		//egov 저장할때, 시큐어코딩으로 저장하는 방식을 사용, 문제있음. 우리방식으로 적용
 		String subject = commUtil.unscript(vo.getNttSj());//게시물제목
-		String content = commUtil.unscript(vo.getNttCn());//개시물내용
+		String content = commUtil.unscript(vo.getNttCn());//게시물내용
 		vo.setNttSj(subject);
 		vo.setNttCn(content);
 		model.addAttribute("result", vo);

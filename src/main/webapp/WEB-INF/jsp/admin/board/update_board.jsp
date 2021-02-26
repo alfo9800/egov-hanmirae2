@@ -45,7 +45,7 @@
                   </div>
                   <div class="form-group">
                   	<label for="nttCn">Content</label>
-                  	<textarea rows="5" name="nttCn" id="nttCn" class="form-control">${result.nttCn}</textarea>
+                  	<textarea rows="5" name="nttCn" id="nttCn" class="form-control"><c:out value="${result.nttCn}" /></textarea>
                   	<!-- 필수입력 값은 html5에서 지원하는 유효성 검사중 required 속성을 사용해서 빈(null)값체크(유효성검사)를 합니다. -->
                   </div>
                   <div class="form-group">
@@ -82,11 +82,11 @@
             </div>
           <!-- 버튼영역 끝 -->
           	<input type="hidden" name="pageIndex" value="<c:out value='${searchVO.pageIndex}'/>"/>
-			<input type="hidden" name="bbsId" value="<c:out value='${result.bbsId}'/>" >				<input type="hidden" name="returnUrl" value="<c:url value='/cop/bbs/forUpdateBoardArticle.do'/>"/>
-			<input type="hidden" name="nttId" value="<c:out value='${result.nttId}'/>" >				<input type="hidden" name="bbsId" value="<c:out value='${result.bbsId}'/>" />
-			<input type="hidden" name="parnts" value="<c:out value='${result.parnts}'/>" >				<input type="hidden" name="nttId" value="<c:out value='${result.nttId}'/>" />
-			<input type="hidden" name="sortOrdr" value="<c:out value='${result.sortOrdr}'/>" >				<input type="hidden" name="bbsAttrbCode" value="<c:out value='${bdMstr.bbsAttrbCode}'/>" />
-			<input type="hidden" name="replyLc" value="<c:out value='${result.replyLc}'/>" >				<input type="hidden" name="bbsTyCode" value="<c:out value='${bdMstr.bbsTyCode}'/>" />
+			<input type="hidden" name="returnUrl" value="<c:url value='/cop/bbs/forUpdateBoardArticle.do'/>"/>
+			<input type="hidden" name="bbsId" value="<c:out value='${result.bbsId}'/>" />
+			<input type="hidden" name="nttId" value="<c:out value='${result.nttId}'/>" />
+			<input type="hidden" name="bbsAttrbCode" value="<c:out value='${bdMstr.bbsAttrbCode}'/>" />
+			<input type="hidden" name="bbsTyCode" value="<c:out value='${bdMstr.bbsTyCode}'/>" />
 			<input type="hidden" name="replyPosblAt" value="<c:out value='${bdMstr.replyPosblAt}'/>" />
 			<input type="hidden" name="fileAtchPosblAt" value="<c:out value='${bdMstr.fileAtchPosblAt}'/>" />
 			<input type="hidden" name="posblAtchFileNumber" value="<c:out value='${bdMstr.posblAtchFileNumber}'/>" />
@@ -96,6 +96,7 @@
 			<input type="hidden" name="password" value="dummy"> <!-- validator 처리를 위해 지정 -->
 			<input name="ntceBgnde" type="hidden" value="10000101">
 			<input name="ntceEndde" type="hidden" value="99991231">
+			
 			<input type="hidden" name="fileSn" value="0">
           </form>
           <!-- 폼내부에 버튼이 있어야지만, 전송버튼이 작동 됩니다. -->
