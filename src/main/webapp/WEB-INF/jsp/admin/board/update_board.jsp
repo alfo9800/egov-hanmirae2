@@ -57,7 +57,7 @@
                   </div>
                   <div class="custom-file">
 	                  <c:if test="${not empty result.atchFileId}">
-			                <hr>
+			                <hr><br>
 			                <strong><i class="far fa-save mr-1"></i> 첨부파일</strong>
 			                <p class="text-muted">
 			                <c:import url="/cmm/fms/selectFileInfs.do" charEncoding="utf-8">

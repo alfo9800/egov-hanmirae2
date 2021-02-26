@@ -197,17 +197,17 @@ public class AdminController {
 			//fileMngService.deleteAllFileInf(fileVO);//USE_AT='N'삭제X
 			//물리파일지우려면 2가지값 필수: file_stre_cours, stre_file_nm
 			
-			//실제 폴더에서 파일도 삭제
-			if(fileVO.getAtchFileId() !=null && fileVO.getAtchFileId() != "") {
-				List<FileVO> fileList = fileMngService.selectFileInfs(fileVO);
-				for(FileVO delfileVO:fileList) {
-					File target = new File(delfileVO.getFileStreCours(),delfileVO.getStreFileNm());
-					if(target.exists()) {
-						target.delete();//폴더에서 기존첨부파일 지우기
-						System.out.println("디버그:첨부파일삭제OK");
-					}	
+			//실제 폴더에서 파일도 삭제 (1개-> 여러개 삭제하는 로직 변경)
+			List<FileVO> fileList = fileMngService.selectFileInfs(fileVO);
+			for(FileVO oneFileVO:fileList) {
+				FileVO delfileVO = fileMngService.selectFileInf(oneFileVO);
+				File target = new File(delfileVO.getFileStreCours(),delfileVO.getStreFileNm());
+				if(target.exists()) {
+					target.delete();//폴더에서 기존첨부파일 지우기
+					System.out.println("디버그:첨부파일삭제OK");
 				}
 			}
+						
 			//첨부파일 레코드삭제
 			boardService.delete_attach(boardVO.getAtchFileId());//게시물에 딸린 첨부파일테이블 2개 레코드삭제
 		}
