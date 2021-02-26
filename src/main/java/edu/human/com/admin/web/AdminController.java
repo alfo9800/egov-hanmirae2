@@ -67,6 +67,107 @@ public class AdminController {
 	@Autowired
 	private EgovFileMngUtil fileUtil;
 	
+	//========================================================================================
+	//게시물 등록 폼화면 호출 POST
+	@RequestMapping("/admin/board/insert_board_form.do")
+	public String insert_board_form(@ModelAttribute("searchVO") BoardVO boardVO, ModelMap model) throws Exception {
+		// 사용자권한 처리
+		if(!EgovUserDetailsHelper.isAuthenticated()) {
+			model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
+	    	return "cmm/uat/uia/EgovLoginUsr";
+		}
+
+	    LoginVO user = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
+		Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
+
+		BoardMasterVO bdMstr = new BoardMasterVO();
+
+		if (isAuthenticated) {
+
+		    BoardMasterVO vo = new BoardMasterVO();
+		    vo.setBbsId(boardVO.getBbsId());
+		    vo.setUniqId(user.getUniqId());
+
+		    bdMstr = bbsAttrbService.selectBBSMasterInf(vo);
+		    model.addAttribute("bdMstr", bdMstr);
+		}
+
+		//----------------------------
+		// 기본 BBS template 지정
+		//----------------------------
+		if (bdMstr.getTmplatCours() == null || bdMstr.getTmplatCours().equals("")) {
+		    bdMstr.setTmplatCours("/css/egovframework/cop/bbs/egovBaseTemplate.css");
+		}
+
+		model.addAttribute("brdMstrVO", bdMstr);
+		////-----------------------------
+		
+		return "admin/board/insert_board";
+	}
+	
+	//게시물 등록 처리 호출 POST
+	@RequestMapping("/admin/board/insert_board.do")
+	public String insert_board(final MultipartHttpServletRequest multiRequest, @ModelAttribute("searchVO") BoardVO boardVO,
+	    @ModelAttribute("bdMstr") BoardMaster bdMstr, @ModelAttribute("board") Board board, BindingResult bindingResult, SessionStatus status,
+	    ModelMap model) throws Exception {
+		// 사용자권한 처리
+		if(!EgovUserDetailsHelper.isAuthenticated()) {
+			model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
+	    	return "cmm/uat/uia/EgovLoginUsr";
+		}
+
+		LoginVO user = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
+		Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
+
+		beanValidator.validate(board, bindingResult);
+		if (bindingResult.hasErrors()) {
+
+		    BoardMasterVO master = new BoardMasterVO();
+		    BoardMasterVO vo = new BoardMasterVO();
+
+		    vo.setBbsId(boardVO.getBbsId());
+		    vo.setUniqId(user.getUniqId());
+
+		    master = bbsAttrbService.selectBBSMasterInf(vo);
+
+		    model.addAttribute("bdMstr", master);
+
+		    //----------------------------
+		    // 기본 BBS template 지정
+		    //----------------------------
+		    if (master.getTmplatCours() == null || master.getTmplatCours().equals("")) {
+			master.setTmplatCours("/css/egovframework/cop/bbs/egovBaseTemplate.css");
+		    }
+
+		    model.addAttribute("brdMstrVO", master);
+		    ////-----------------------------
+
+		    return "admin/board/insert_board";
+		}
+
+		if (isAuthenticated) {
+		    List<FileVO> result = null;
+		    String atchFileId = "";
+
+		    final Map<String, MultipartFile> files = multiRequest.getFileMap();
+		    if (!files.isEmpty()) {
+			result = fileUtil.parseFileInf(files, "BBS_", 0, "", "");
+			atchFileId = fileMngService.insertFileInfs(result);
+		    }
+		    board.setAtchFileId(atchFileId);
+		    board.setFrstRegisterId(user.getUniqId());
+		    board.setBbsId(board.getBbsId());
+
+		    board.setNtcrNm("");	// dummy 오류 수정 (익명이 아닌 경우 validator 처리를 위해 dummy로 지정됨)
+		    board.setPassword("");	// dummy 오류 수정 (익명이 아닌 경우 validator 처리를 위해 dummy로 지정됨)
+		    //board.setNttCn(unscript(board.getNttCn()));	// XSS 방지
+
+		    bbsMngService.insertBoardArticle(board);
+		}
+		
+		return "redirect:/admin/board/list_board.do?bbsId="+board.getBbsId();
+	}
+	
 	//게시물 수정 처리 호출 POST
 	@RequestMapping("/admin/board/update_board.do")
 	public String update_board(final MultipartHttpServletRequest multiRequest, @ModelAttribute("searchVO") BoardVO boardVO,

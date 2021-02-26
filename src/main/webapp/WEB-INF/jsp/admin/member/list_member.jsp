@@ -71,6 +71,9 @@
                     </tr>
                   </thead>
                   <tbody>
+                  <c:if test="${fn:length(listMember) == 0}">
+                  	<tr><td colspan="6" class="text-center">조회된 데이터가 없습니다.</td></tr>
+                  </c:if>
                   <c:forEach items="${listMember}" var="memberVO">
                     <tr>
                       <td><a href="<c:url value='/admin/member/view_member.do?emplyr_id=${memberVO.EMPLYR_ID}&page=${pageVO.page}&search_type=${pageVO.search_type}&search_keyword=${pageVO.search_keyword}' />">${memberVO.EMPLYR_ID}</a></td>
