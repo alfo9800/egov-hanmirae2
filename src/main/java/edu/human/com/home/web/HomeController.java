@@ -16,10 +16,10 @@ public class HomeController {
 		return "redirect:/";
 	}
 	
-	@RequestMapping("/home.do")
+	@RequestMapping("/tiles/home.do")
 	public String home() throws Exception {
 		
-		return "home/home";
+		return "home.tiles";
 	}
 	
 	
