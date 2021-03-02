@@ -1,8 +1,12 @@
 package edu.human.com.util;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -10,13 +14,46 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import edu.human.com.member.service.EmployerInfoVO;
 import edu.human.com.member.service.MemberService;
+import egovframework.com.cmm.EgovMessageSource;
+import egovframework.com.cmm.LoginVO;
+import egovframework.let.uat.uia.service.EgovLoginService;
 
 @Controller
 public class CommonUtil {
 	@Inject
 	private MemberService memberService;
 	
-	//첨부파일 삭제 메서드
+	@Autowired
+	private EgovLoginService loginService;
+	
+	@Autowired
+	private EgovMessageSource egovMessageSource;
+	
+	//============================================================================
+	
+	/**
+	 * 기존 로그인처리는 egov것 그대로 사용
+	 * 단, 로그인 처리 이후 이동할 페이지를 OLD에서 NEW변경
+	 */
+	@RequestMapping(value = "/login_action.do") //1변경
+	public String actionLogin(@ModelAttribute("loginVO") LoginVO loginVO, HttpServletRequest request, ModelMap model) throws Exception {
+
+		// 1. 일반 로그인 처리
+		LoginVO resultVO = loginService.actionLogin(loginVO);
+
+		boolean loginPolicyYn = true;
+
+		if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("") && loginPolicyYn) {
+			//로그인 성공 시
+			request.getSession().setAttribute("LoginVO", resultVO);
+			return "forward:/tiles/home.do"; //2변경 new홈으로 이동
+		} else {
+			//로그인 실패 시
+			model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
+			return "login.tiles"; //3변경 
+		}
+
+	}
 	
 	
 	 /**
