@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://egovframework.gov/ctl/ui" prefix="ui" %>
 	
 <style>
 .select {
@@ -8,6 +9,12 @@
 	margin-top: 1px;
 	height: 35px;
 	border: 1px solid #ccc;
+}
+.btn_submit {
+	cursor: pointer;
+	border: none;
+	background: none;
+	font-sizw: 0.95em;
 }
 </style>
 	
@@ -37,7 +44,7 @@
 								<option value="1" <c:if test='${searchVO.searchCnd=="1"}'>selected</c:if> >내용</option>             
 								<option value="2" <c:if test='${searchVO.searchCnd=="2"}'>selected</c:if> >작성자</option>            
 	                    </select>
-					<input name="searchWrd" type="text" class="tbox" title="검색어를 입력해주세요" placeholder="검색어를 입력해주세요">
+					<input value="${searchVO.searchWrd}" name="searchWrd" type="text" class="tbox" title="검색어를 입력해주세요" placeholder="검색어를 입력해주세요">
 					<button class="btn_srch">검색</button>
 				</fieldset>
 					<input type="hidden" name="bbsId" value="<c:out value='${boardVO.bbsId}'/>" />
@@ -61,38 +68,44 @@
 					</tr>
 				</thead>
 				<tbody>
-					<c:forEach items="${resultList}" var="boardVO" varStatus="cnt">
+					<c:forEach items="${resultList}" var="result" varStatus="cnt">
 						<tr>
 							<td>${paginationInfo.totalRecordCount+1-((searchVO.pageIndex-1)*searchVO.pageSize+cnt.count)}
 							</td>
 							<td class="tit_notice">
-								<a href="#">
-									${boardVO.nttSj}
-								</a>
+								<form name="view_form" action="<c:url value='/tiles/board/view_board.do' />" method="post">
+	                     			<!-- 답글일경우 계단식표시 추가(아래) -->
+				                   	<c:if test="${result.replyLc!=0}">
+						                <c:forEach begin="0" end="${result.replyLc}" step="1">
+						                    &nbsp;<!-- 들여쓰기 역할하는 스페이스바 특수문자 -->
+						                </c:forEach>
+					                &#8627;<!-- 화살표 특수문자 -->
+					              	</c:if>
+			                       <input type="hidden" name="bbsId" value="<c:out value='${result.bbsId}'/>" />
+			                       <input type="hidden" name="nttId"  value="<c:out value="${result.nttId}"/>" />
+			                       <input type="hidden" name="bbsTyCode" value="<c:out value='${brdMstrVO.bbsTyCode}'/>" />
+			                       <input type="hidden" name="bbsAttrbCode" value="<c:out value='${brdMstrVO.bbsAttrbCode}'/>" />
+			                       <input type="hidden" name="authFlag" value="<c:out value='${brdMstrVO.authFlag}'/>" />
+			                       <input name="pageIndex" type="hidden" value="<c:out value='${searchVO.pageIndex}'/>"/>
+			                       <button class="btn_submit" style="cursor:pointer;"><c:out value="${result.nttSj}" /></button>
+			                     </form>		
 							</td>
-							<td>${boardVO.inqireCo}</td>
-							<td>${boardVO.frstRegisterPnttm}</td>
+							<td>${result.inqireCo}</td>
+							<td>${result.frstRegisterPnttm}</td>
 						</tr>
 					</c:forEach>		
 				</tbody>
 			</table>
 			<!-- //게시물리스트영역 -->
 			
-			<!-- 페이징처리영역 -->
+			<!-- 페이징처리 시작 -->
 			<div class="pagination">
-				<a href="javascript:;" class="firstpage  pbtn"><img src="<c:url value='/' />resources/home/img/btn_firstpage.png" alt="첫 페이지로 이동"></a>
-				<a href="javascript:;" class="prevpage  pbtn"><img src="<c:url value='/' />resources/home/img/btn_prevpage.png" alt="이전 페이지로 이동"></a>
-				<a href="javascript:;"><span class="pagenum currentpage">1</span></a>
-				<a href="javascript:;"><span class="pagenum">2</span></a>
-				<a href="javascript:;"><span class="pagenum">3</span></a>
-				<a href="javascript:;"><span class="pagenum">4</span></a>
-				<a href="javascript:;"><span class="pagenum">5</span></a>
-				<a href="javascript:;" class="nextpage  pbtn"><img src="<c:url value='/' />resources/home/img/btn_nextpage.png" alt="다음 페이지로 이동"></a>
-				<a href="javascript:;" class="lastpage  pbtn"><img src="<c:url value='/' />resources/home/img/btn_lastpage.png" alt="마지막 페이지로 이동"></a>
+				<ui:pagination paginationInfo="${paginationInfo}" type="paging" jsFunction="fn_egov_select_noticeList" />
 			</div>
-			<!-- //페이징처리영역 -->
+			<!-- 페이징처리 끝 -->
+
 			<p class="btn_line">
-				<a href="board_write.html" class="btn_baseColor">등록</a>
+				<a href="<c:url value='/tiles/board/insert_board.do?bbsId=${boardVO.bbsId}' />" class="btn_baseColor">등록</a>
 			</p>
 		</div>
 		<!-- //메인본문영역 -->
