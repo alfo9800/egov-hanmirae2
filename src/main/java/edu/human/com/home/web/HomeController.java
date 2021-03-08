@@ -1,10 +1,14 @@
 package edu.human.com.home.web;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,6 +16,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -68,6 +73,26 @@ public class HomeController {
 	
 	
 	//==================================================
+	@RequestMapping("/tiles/board/previewImage.do")
+	public void previewImage(HttpServletResponse response, @RequestParam("atchFileId") String atchFileId) throws Exception {
+		FileVO fileVO = new FileVO();
+		fileVO.setAtchFileId(atchFileId);
+		for(int cnt=0;cnt<3;cnt++) {
+			fileVO.setFileSn(Integer.toString(cnt)); //int cnt에 대한 toString형 변환
+			fileVO = fileMngService.selectFileInf(fileVO);
+			if(fileVO != null) {
+				break;
+			}
+		}
+		//위에서 구한 첨부파일 저장위치, 저장파일명을 가지고, 화면에 나타나도록 == 스트리밍
+		File file = new File(fileVO.getFileStreCours(), fileVO.getStreFileNm());
+		
+		//스트리밍에 필요한 클래스 변수 생성(3가지)
+		FileInputStream fis; //(= null; 생략가능)객체 생성
+		BufferedInputStream bis;
+		ByteArrayOutputStream baos;
+	}
+	
 	@RequestMapping("/tiles/board/update_board.do")
 		public String update_board(RedirectAttributes rdat,final MultipartHttpServletRequest multiRequest, @ModelAttribute("searchVO") BoardVO boardVO,
 			    @ModelAttribute("bdMstr") BoardMaster bdMstr, @ModelAttribute("board") Board board, BindingResult bindingResult, ModelMap model,
