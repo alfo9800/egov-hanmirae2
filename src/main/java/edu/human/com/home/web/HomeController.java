@@ -75,6 +75,12 @@ public class HomeController {
 	
 	
 	//==================================================
+	@RequestMapping("/tiles/join.do")
+	public String join() throws Exception {
+		
+		return "join.tiles";
+	}
+	
 	@RequestMapping("/tiles/board/previewImage.do")
 	public void previewImage(HttpServletRequest request, HttpServletResponse response, @RequestParam("atchFileId") String atchFileId) throws Exception {
 		FileVO fileVO = new FileVO();
