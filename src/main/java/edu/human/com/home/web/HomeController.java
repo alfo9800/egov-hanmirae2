@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -28,6 +29,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springmodules.validation.commons.DefaultBeanValidator;
 
 import edu.human.com.board.service.BoardService;
+import edu.human.com.member.service.EmployerInfoVO;
+import edu.human.com.member.service.MemberService;
 import edu.human.com.util.CommonUtil;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.LoginVO;
@@ -41,6 +44,7 @@ import egovframework.let.cop.bbs.service.BoardMasterVO;
 import egovframework.let.cop.bbs.service.BoardVO;
 import egovframework.let.cop.bbs.service.EgovBBSAttributeManageService;
 import egovframework.let.cop.bbs.service.EgovBBSManageService;
+import egovframework.let.utl.sim.service.EgovFileScrty;
 import egovframework.rte.fdl.property.EgovPropertyService;
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 
@@ -73,11 +77,24 @@ public class HomeController {
 	@Inject
 	private BoardService boardService;
 	
+	@Inject
+	private MemberService memberService;
 	
 	//==================================================
 	@RequestMapping("/tiles/join.do")
-	public String join() throws Exception {
-		
+	public String join(EmployerInfoVO memberVO,RedirectAttributes rdat) throws Exception {
+		//입력DB처리 호출: 1.암호를 egov암호화툴로 암호, 2.ESNTL_ID 고유ID(게시판관리자ID) 생성
+		String formPassword = memberVO.getPASSWORD();//jsp입력폼에서 전송된 암호값GET
+		String encPassword = EgovFileScrty.encryptPassword(formPassword, memberVO.getEMPLYR_ID());
+		memberVO.setPASSWORD(encPassword);//egov암호화툴로 암호화된 값SET
+		memberVO.setESNTL_ID("USRCNFRM_" + memberVO.getEMPLYR_ID());//고유ID값 SET
+		memberService.insertMember(memberVO);
+		rdat.addFlashAttribute("msg", "회원가입");
+		return "redirect:/";
+	}
+	
+	@RequestMapping("/tiles/join_form.do")
+	public String join_form() throws Exception {		
 		return "join.tiles";
 	}
 	

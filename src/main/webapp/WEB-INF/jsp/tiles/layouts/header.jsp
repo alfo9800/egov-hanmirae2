@@ -47,7 +47,7 @@ if("${msg}" != "") {
 					<c:if test="${LoginVO.id eq null || LoginVO.id eq ''}">
 						<!-- 로그인 전 보이는 메뉴 -->
 						<li><a href="<c:url value='/tiles/login.do'/>">로그인</a></li>
-						<li><a href="<c:url value='/tiles/join.do' />">회원가입</a></li>
+						<li><a href="<c:url value='/tiles/join_form.do' />">회원가입</a></li>
 					</c:if>	
 					<c:if test="${LoginVO.id ne null}">
 						<!-- 로그인 후 보이는 메뉴 -->
