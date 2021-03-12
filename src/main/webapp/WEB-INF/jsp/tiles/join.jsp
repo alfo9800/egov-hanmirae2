@@ -49,9 +49,9 @@
 						<li class="clear">
 							<label for="sexdstn_lbl" class="tit_lbl pilsoo_item">성별</label>
 							<div class="app_content radio_area">
-								<input type="radio" name="SEXDSTN_CODE" class="css-radio" id="man_lbl" checked="" />
+								<input value="M" type="radio" name="SEXDSTN_CODE" class="css-radio" id="man_lbl" checked="" />
 								<label for="man_lbl">남</label>
-								<input type="radio" name="SEXDSTN_CODE" class="css-radio" id="woman_lbl" />
+								<input value="F" type="radio" name="SEXDSTN_CODE" class="css-radio" id="woman_lbl" />
 								<label for="woman_lbl">여</label>
 							</div>
 						</li>

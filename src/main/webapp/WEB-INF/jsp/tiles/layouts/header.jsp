@@ -51,7 +51,11 @@ if("${msg}" != "") {
 					</c:if>	
 					<c:if test="${LoginVO.id ne null}">
 						<!-- 로그인 후 보이는 메뉴 -->
-						<li><a href="#">${LoginVO.name} 님 환영합니다.</a></li>
+						<li>
+							<a href="<c:url value='/tiles/member/mypage_form.do' />" title="마이페이지">
+							${LoginVO.name}님 환영합니다.
+							</a>
+						</li>
 						<li><a href="<c:url value='/logout.do'/>">로그아웃</a></li>
 						<li><a href="<c:url value='/admin/home.do' />">AdminLTE</a></li>
 					</c:if>			
