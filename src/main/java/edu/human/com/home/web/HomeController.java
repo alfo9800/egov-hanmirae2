@@ -82,6 +82,36 @@ public class HomeController {
 	private MemberService memberService;
 	
 	//==================================================
+	@RequestMapping("/tiles/member/mypage_delete.do")
+	public String mypage_delete(HttpServletRequest request,EmployerInfoVO memberVO,RedirectAttributes rdat) throws Exception {
+		//회원 수정 페이지 DB처리
+		if(memberVO.getPASSWORD() != null && !"".equals(memberVO.getPASSWORD())) {
+			String formPassword = memberVO.getPASSWORD();//GET
+			String encPassword = EgovFileScrty.encryptPassword(formPassword, memberVO.getEMPLYR_ID());
+			memberVO.setPASSWORD(encPassword);//SET
+		}
+		memberVO.setEMPLYR_STTUS_CODE("S");//회원비활성화로 변경
+		memberService.updateMember(memberVO);
+		rdat.addFlashAttribute("msg", "회원탈퇴");
+		//현재 URL의 모든세션을 날립니다.
+		request.getSession().invalidate();//LoginVO세션값이 현재 URL의 모든세션 날림.
+		
+		return "redirect:/tiles/home.do";
+	}
+	
+	@RequestMapping("/tiles/member/mypage.do")
+	public String mypage(EmployerInfoVO memberVO,RedirectAttributes rdat) throws Exception {
+		//회원 수정 페이지 DB처리
+		if(memberVO.getPASSWORD() != null && !"".equals(memberVO.getPASSWORD())) {
+			String formPassword = memberVO.getPASSWORD();//GET
+			String encPassword = EgovFileScrty.encryptPassword(formPassword, memberVO.getEMPLYR_ID());
+			memberVO.setPASSWORD(encPassword);//SET
+		}
+		memberService.updateMember(memberVO);
+		rdat.addFlashAttribute("msg", "수정");//아래 view_member.jsp로 변수 msg값을 전송합니다.
+		
+		return "redirect:/tiles/member/mypage_form/do";
+	}
 	
 	@RequestMapping("/tiles/member/mypage_form.do")
 	public String mypage_form(HttpServletRequest request, Model model) throws Exception {
