@@ -57,7 +57,12 @@ if("${msg}" != "") {
 							</a>
 						</li>
 						<li><a href="<c:url value='/logout.do'/>">로그아웃</a></li>
-						<li><a href="<c:url value='/admin/home.do' />">AdminLTE</a></li>
+						<c:if test="${ROLE_ADMIN ne null}">
+							<li><a href="<c:url value='/admin/home.do' />">AdminLTE</a></li>
+						</c:if>
+						<c:if test="${ROLE_ADMIN eq null}">
+							<li><a href="<c:url value='/tiles/member/mypage_form.do' />">Mypage</a></li>
+						</c:if>
 					</c:if>			
 					
 				</ul>	

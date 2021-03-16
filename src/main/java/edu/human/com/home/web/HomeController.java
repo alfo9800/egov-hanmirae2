@@ -557,8 +557,10 @@ public class HomeController {
 	}
 	
 	@RequestMapping("/logout.do")
-	public String logout() throws Exception {
+	public String logout(HttpServletRequest request) throws Exception {
 		RequestContextHolder.getRequestAttributes().removeAttribute("LoginVO", RequestAttributes.SCOPE_SESSION);
+		request.getSession().invalidate(); //LoginVO 세션값이 현재 URL의 모든 세션 날림.
+		
 		return "redirect:/";
 	}
 	
