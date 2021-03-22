@@ -23,6 +23,9 @@
 
 </style>
 <script>
+if("${param.msg_security}" == "2"){
+	alert("접근 권한이 없습니다. 홈페이지로 이동 합니다.");
+}
 if("${msg}" != "") {
 	alert("${msg} 에 성공하였습니다!");
 }

@@ -1,6 +1,7 @@
 package edu.human.com.util;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -13,6 +14,8 @@ import org.apache.commons.logging.impl.SimpleLog;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.stereotype.Controller;
@@ -47,7 +50,8 @@ public class CommonUtil {
 	//private static final Logger logger = LoggerFactory.getLogger(SimpleLog.class);
 	private static Logger logger = Logger.getLogger(SimpleLog.class);
 	
-	//로그인 인증+권한 체크 1개 메서드로 처리(아래)
+	//스프링시큐리티 권한 체크 X, 개발자 임의로 만든 권한 체크
+	//로그인 인증+권한 체크 1개 메서드로 처리 ==> AdminController에서 관리자 권한 체크 때문에 생성
 	//기존전자정부에서 List<String>를 사용한 이유 ROLE_ADMIN,ROLE_USER 권한이 2개 이상일수 있습니다
 	public Boolean getAuthorities() throws Exception {
 		Boolean authority = Boolean.FALSE;
@@ -64,6 +68,31 @@ public class CommonUtil {
 		//여기까지 true값을 가져오면, 관리자라고 명시.
 		return authority;
 	}
+	
+	//스프링시큐리티 권한 체크
+	//EgovUserDetailHelper클래스에 있는 매소드를 복사해서 CommonUtil클래스에 가져다가 사용
+	private List<String> getAuthorities(String string) {
+		List<String> listAuth = new ArrayList<String>();
+		if (EgovObjectUtil.isNull((LoginVO) RequestContextHolder.getRequestAttributes().getAttribute("LoginVO", RequestAttributes.SCOPE_SESSION))) {
+			return null;
+		}
+		//스프링 시큐리티 연동 추가(아래)
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String listAuthTemp1 = authentication.getAuthorities().toString();
+		logger.debug("디버그 : 로그인 사용자의 권한 리스트 출력" + listAuthTemp1);
+		//String을 리스트형으로 변환해서 반환값에 넣습니다.(아래) [ ROLE_ADMIN, ROLE_USER ] 를 리스트형변환
+		listAuthTemp1 = listAuthTemp1.replace("[", "");
+		listAuthTemp1 = listAuthTemp1.replace("]", "");
+		listAuthTemp1 = listAuthTemp1.replace(" ", "");
+		String[] listAuthTemp2 = listAuthTemp1.split(",");
+		listAuth = Arrays.asList(listAuthTemp2);//배열을 리스트로 형변환하는 매서드 asList사용.
+		/* 배열을 리스형으로 변경결과(가로-> 세로로 변경)
+		ROLE_ADMIN
+		ROLE_USER
+		*/
+		return listAuth;
+	}
+		
 	
 	/**
 	 * 기존 로그인 처리는 egov것 그대로 사용하고,
@@ -101,26 +130,23 @@ public class CommonUtil {
 						request.getServletContext().getContextPath() + "/egov_security_login", "POST"));
 			} else {
 				//throw new IllegalStateException("No AuthenticationProcessingFilter");
-				System.out.println("디버그 ApplicationContext에 UsernamePasswordAuthenticationFilter 클래스가 없다면");
-				return "forward:/tiles/home.do";//스프링시큐리티 설정이 없다면 이후 코딩 무시
+				return "forward:/tiles/home.do";//context-security.xml에서 bean설정 없을 때
 			}
+			//false이면 chain 처리 되지 않음.
 			springSecurity.setContinueChainBeforeSuccessfulAuthentication(false); 
-			//false이면 chain 처리 되지 않음.. (filter가 아닌 경우 false로...)
+			//set으로 username과 password를 처리 context-security.xml파일의 ? 변수 저장
 			springSecurity.doFilter(new RequestWrapperForSecurity(request, resultVO.getId(), resultVO.getPassword()), response, null);
-			
-			System.out.println("context-security.xml파일의 jdbcAuthoritiesByUsernameQuery 확인");
-	    	List<String> authorities = EgovUserDetailsHelper.getAuthorities();
-	    	// 1. authorites 에  권한이 있는지 체크 TRUE/FALSE
-	    	System.out.println("디버그" + authorities.contains("ROLE_ADMIN"));
-	    	System.out.println("디버그" + authorities.contains("ROLE_USER"));
-	    	System.out.println("디버그" + authorities.contains("ROLE_ANONYMOUS"));
-	    	for(String role:authorities) {
-	    		logger.debug("디버그" + role);
+	    	
+			//List<String> authorities = EgovUserDetailsHelper.getAuthorities();
+	    	List<String> authorities = getAuthorities("EgovUserDetailsHelper is Not use");
+			// 1. authorites 에  권한이 있는지 체크 TRUE/FALSE
+	    	logger.debug("디버그:" + authorities.contains("ROLE_ADMIN"));
+	    	logger.debug("디버그:" + authorities.contains("ROLE_USER"));
+	    	logger.debug("디버그:" +authorities.contains("ROLE_ANONYMOUS"));
+			//위 값을 이용해서 세션을 발생.
+	    	if(authorities.contains("ROLE_ADMIN")) {
+	    		request.getSession().setAttribute("ROLE_ADMIN", true);
 	    	}
-	    	if( authorities.contains("ROLE_ADMIN") ) {
-				request.getSession().setAttribute("ROLE_ADMIN", true);
-			}
-	    	//*스프링 시큐리티 연동 추가 끝
 	    	
 			return "forward:/tiles/home.do";//변경2 NEW홈으로 이동
 		} else {
