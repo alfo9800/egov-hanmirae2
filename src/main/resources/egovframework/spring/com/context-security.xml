@@ -7,6 +7,13 @@
 		http://www.egovframe.go.kr/schema/egov-security http://www.egovframe.go.kr/schema/egov-security/egov-security-3.7.xsd
 		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.2.xsd">
 
+<!--  error 메세지 해결 : The request was rejected because the URL contained a potentially malicious String ";" -->	
+	<bean id="egovStrictHttpFirewall" class="org.springframework.security.web.firewall.StrictHttpFirewall">
+	<property name="allowSemicolon" value="true"/>
+	</bean>
+	<security:http-firewall ref="egovStrictHttpFirewall"/>
+
+
 <!-- 아래 스프링시큐리티를 적용하지 않는 경로 설정(안트Ant 패턴사용) -->
 <security:http pattern="/css/**" security="none" />
 <security:http pattern="/common/**" security="none" />
@@ -22,8 +29,8 @@
 		accessDeniedUrl="/tiles/home.do?msg_security=2"
 
 		dataSource="egov.dataSource"
-		jdbcUsersByUsernameQuery="SELECT a.EMPLYR_ID AS USER_ID, a.PASSWORD, 1 AS ENABLED, a.USER_NM, 'USR' AS USER_SE, a.EMAIL_ADRES AS USER_EMAIL, '-' AS ORGNZT_ID, a.ESNTL_ID, '-' AS ORGNZT_NM FROM LETTNEMPLYRINFO a, LETTNAUTHORGROUPINFO b WHERE a.GROUP_ID = b.GROUP_ID AND a.EMPLYR_ID = ?"
-		jdbcAuthoritiesByUsernameQuery="SELECT a.EMPLYR_ID USER_ID, b.GROUP_NM AUTHORITY FROM LETTNEMPLYRINFO a, LETTNAUTHORGROUPINFO b WHERE a.GROUP_ID = b.GROUP_ID AND a.EMPLYR_ID = ?"
+		jdbcUsersByUsernameQuery="SELECT a.EMPLYR_ID AS USER_ID, a.PASSWORD, 1 AS ENABLED, a.USER_NM, 'USR' AS USER_SE, a.EMAIL_ADRES AS USER_EMAIL, '-' AS ORGNZT_ID, a.ESNTL_ID, '-' AS ORGNZT_NM FROM LETTNEMPLYRINFO a, LETTNAUTHORGROUPINFO b WHERE a.GROUP_ID = b.GROUP_ID AND a.EMPLYR_ID = 'admin'"
+		jdbcAuthoritiesByUsernameQuery="SELECT a.EMPLYR_ID USER_ID, b.GROUP_NM AUTHORITY FROM LETTNEMPLYRINFO a, LETTNAUTHORGROUPINFO b WHERE a.GROUP_ID = b.GROUP_ID AND a.EMPLYR_ID = 'admin'"
 		jdbcMapClass="edu.human.com.authorrole.EgovSessionMapping"
 
 		requestMatcherType="regex"
