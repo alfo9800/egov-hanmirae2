@@ -9,7 +9,9 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">화면권한리스트</h1>
+            <h1 class="m-0">
+           		 화면권한리스트
+            </h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -18,6 +20,9 @@
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
+        <div style="font-size:12px;color:red;">
+        	주) 추가/수정/삭제 시 톰캣을 restart해야 하지만, 권한 적용 됩니다.
+        </div>
       </div><!-- /.container-fluid -->
     </div>
     <!-- /.content-header -->
@@ -62,27 +67,26 @@
                 <table class="table table-hover text-nowrap">
                   <thead>
                     <tr>
-                      <th>EMPLYR_ID</th><!-- 테이블 헤드 타이틀태그th -->
-                      <th>USER_NM</th>
-                      <th>EMAIL_ADRES</th>
-                      <th>EMPLYR_STTUS_CODE</th>
-                      <th>SBSCRB_DE</th>
-                      <th>GROUP_ID</th>
+                      <th>ROLE_PTTRN</th><!-- 테이블 헤드 타이틀태그th -->
+                      <th>AUTHOR_CODE</th>
+                      <th>AUTHORROLE_DC</th>
+                      <th>SORT_ORDR</th>
+                      <th>USE_AT</th>
                     </tr>
                   </thead>
                   <tbody>
-                  <c:forEach items="listMember" var="memberVO">
+                  <c:forEach items="${authorRoleList}" var="vo">
                     <tr>
-                      <td><a href="<c:url value='/admin/member/view_member.do?emplyr_id=&page=&search_type=&search_keyword=' />"></a></td>
-                      <!-- 위에 a링크값은 리스트가 늘어날 수록 동적으로 user_id값이 변하게 됩니다. 개발자가 jsp처리 -->
-                      <td></td>
-                      <td></td>
-                      <td></td>
                       <td>
-                      
+	                      <a href="<c:url value='/admin/authorrole/view_authorrole.do?authorrole_id=${vo.AUTHORROLE_ID}&page=${pageVO.page}&search_type=${pageVO.search_type}&search_keyword=${search_keyword}' />">
+	                      ${vo.ROLE_PTTRN}
+	                      </a>
                       </td>
-                      <td><span class="badge bg-danger"></span></td>
-                      <!-- 권한표시는 부트스트랩 뺏지 클래스 사용 -->
+                      <!-- 위에 a링크값은 리스트가 늘어날 수록 동적으로 user_id값이 변하게 됩니다. 개발자가 jsp처리 -->
+                      <td>${vo.AUTHOR_CODE}</td>
+                      <td>${vo.AUTHORROLE_DC}</td>
+                      <td>${vo.SORT_ORDR}</td>
+                      <td>${vo.USE_AT}</td>
                     </tr>
                   </c:forEach>
                   </tbody>
@@ -96,15 +100,6 @@
             <!-- 버튼영역 시작 -->
               <div class="card-body">
               	<a href="<c:url value='/admin/member/insert_member.do' />" class="btn btn-primary float-right">등록</a>
-              	<!-- 부트스트랩 디자인 버튼클래스를 이용해서 a태그를 버튼모양 만들기(위) -->
-              	<!-- btn클래스명이 버튼모양으로 변경, btn-primary클래스명은 버튼색상을 변경하는역할 -->
-              	<!-- 
-              	어떻게 스타일이 아닌 클래스에다가 넣어줌으로서 모양과 위치과 바뀌는건가요?
-              	... 생각하는 부트스트랩은 html과 css를 모아놓은 집합체라고 생각하는데 
-              	거기에 float-right클라스로 정해놓은곳에 오른쪽으로 가게하는 스타일이 지정되어있어서 = 부트스트랩
-              	클래스 이름만 지정해줘도 그 클래스로 지정된 스타일이 적용되어서 
-              	클래스 이름 지정만으로도 스타일이 적용된다고 보면...          	
-              	 -->
               </div>
             <!-- 버튼영역 끝 -->
 

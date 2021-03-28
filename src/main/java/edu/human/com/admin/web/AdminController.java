@@ -21,6 +21,8 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springmodules.validation.commons.DefaultBeanValidator;
 
+import edu.human.com.authorrole.service.AuthorRoleService;
+import edu.human.com.authorrole.service.AuthorRoleVO;
 import edu.human.com.board.service.BoardService;
 import edu.human.com.member.service.EmployerInfoVO;
 import edu.human.com.member.service.MemberService;
@@ -46,6 +48,8 @@ import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 public class AdminController {
 	
 	@Inject
+	private AuthorRoleService authorRoleService;
+	@Inject
 	private MemberService memberService;
 	@Inject
 	private CommonUtil commUtil;
@@ -70,8 +74,13 @@ public class AdminController {
 	//========================================================================================
 	//권한 관리 리스트 호출 GET
 	@RequestMapping(value="/admin/authorrole/list_author.do",method=RequestMethod.GET)
-	public String list_author(Model model) throws Exception {
+	public String list_author(Model model, @ModelAttribute("pageVO") PageVO pageVO) throws Exception {
 		//Get,Set VO생성
+		if(pageVO.getPage() == null) { pageVO.setPage(1); }
+		pageVO.setPerPageNum(5);//하단에 보여줄 페이지번호 개수
+		pageVO.setQueryPerPageNum(10);//한화면에 보여줄 레코드의 개수
+		List<AuthorRoleVO> authorRoleList = authorRoleService.selectAuthorRole(pageVO);
+		model.addAttribute("authorRoleList",authorRoleList);
 		return "admin/authorrole/list_author";
 	}
 	
