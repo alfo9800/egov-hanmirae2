@@ -6,6 +6,8 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import org.apache.commons.logging.impl.SimpleLog;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,6 +25,7 @@ import org.springmodules.validation.commons.DefaultBeanValidator;
 
 import edu.human.com.authorrole.service.AuthorRoleService;
 import edu.human.com.authorrole.service.AuthorRoleVO;
+import edu.human.com.authorrole.service.impl.AuthorRoleDAO;
 import edu.human.com.board.service.BoardService;
 import edu.human.com.member.service.EmployerInfoVO;
 import edu.human.com.member.service.MemberService;
@@ -46,7 +49,11 @@ import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 
 @Controller
 public class AdminController {
+	private Logger logger = Logger.getLogger(SimpleLog.class);
 	
+	
+	@Inject
+	private AuthorRoleDAO authorRoleDAO;
 	@Inject
 	private AuthorRoleService authorRoleService;
 	@Inject
@@ -79,7 +86,12 @@ public class AdminController {
 		if(pageVO.getPage() == null) { pageVO.setPage(1); }
 		pageVO.setPerPageNum(5);//하단에 보여줄 페이지번호 개수
 		pageVO.setQueryPerPageNum(10);//한화면에 보여줄 레코드의 개수
+		
 		List<AuthorRoleVO> authorRoleList = authorRoleService.selectAuthorRole(pageVO);
+		int countAuthorRole = authorRoleDAO.countAuthorRole(pageVO);
+		pageVO.setTotalCount(countAuthorRole); //이 명령어에서 prev, next 등이 계산 됨.
+		logger.debug("디버그: 토탈 사이즈 "+countAuthorRole);
+		
 		model.addAttribute("authorRoleList",authorRoleList);
 		return "admin/authorrole/list_author";
 	}

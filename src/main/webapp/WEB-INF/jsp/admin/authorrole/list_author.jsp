@@ -39,14 +39,14 @@
 
                 <div class="card-tools">
 
-                  <form name="search_form" action="<c:url value='/' />admin/member/list_member.do" method="get">
+                  <form name="search_form" action="<c:url value='/' />admin/authorrole/list_author.do" method="get">
                   <div class="input-group input-group-sm">
                     <!-- 부트스트랩 템플릿만으로는 디자인처리가 부족한 경우가 있기 때문에 종종 인라인 스타일 사용 -->
                     <div>
                         <select name="search_type" class="form-control">
                             <option value="all" selected>-전체-</option>
-                            <option value="user_id" data-select2-id="8">ID</option>
-                            <option value="user_name" data-select2-id="16">이름</option>
+                            <option value="author_code" data-select2-id="8">권한 이름</option>
+                            <option value="role_pttrn" data-select2-id="16">화면 경로</option>
                         </select>
                     </div>
                     <div>
@@ -99,7 +99,7 @@
 
             <!-- 버튼영역 시작 -->
               <div class="card-body">
-              	<a href="<c:url value='/admin/member/insert_member.do' />" class="btn btn-primary float-right">등록</a>
+              	<a href="<c:url value='/admin/authorrole/insert_author.do' />" class="btn btn-primary float-right">등록</a>
               </div>
             <!-- 버튼영역 끝 -->
 
@@ -108,7 +108,7 @@
             	<ul class="pagination">
             	 <c:if test="${pageVO.prev}">
 	            	 <li class="paginate_button page-item previous" id="example2_previous">
-	            	 <a href="<c:url value='/' />admin/member/list_member.do?page=${pageVO.startPage-1}&search_type=${pageVO.search_type}&search_keyword=${pageVO.search_keyword}" aria-controls="example2" data-dt-idx="0" tabindex="0" class="page-link">Previous</a>
+	            	 <a href="<c:url value='/' />admin/authorrole/list_author.do?page=${pageVO.startPage-1}&search_type=${pageVO.search_type}&search_keyword=${pageVO.search_keyword}" aria-controls="example2" data-dt-idx="0" tabindex="0" class="page-link">Previous</a>
 	            	 </li>
 	            	 <!-- 위 이전게시물링크 -->
             	 </c:if>
@@ -116,13 +116,13 @@
             	 <!-- jstl for문이고, 향상된 for문이아닌 고전for문으로 시작값, 종료값 var변수idx는 인덱스값이 저장되어 있습니다. -->
             	 <c:forEach begin="${pageVO.startPage}" end="${pageVO.endPage}" var="idx">
             	 	<li class='paginate_button page-item <c:out value="${idx==pageVO.page?'active':''}" />'>
-            	 	<a href="<c:url value='/' />admin/member/list_member.do?page=${idx}&search_type=${pageVO.search_type}&search_keyword=${pageVO.search_keyword}" aria-controls="example2" data-dt-idx="1" tabindex="0" class="page-link">${idx}</a></li>
+            	 	<a href="<c:url value='/' />admin/authorrole/list_author.do?page=${idx}&search_type=${pageVO.search_type}&search_keyword=${pageVO.search_keyword}" aria-controls="example2" data-dt-idx="1" tabindex="0" class="page-link">${idx}</a></li>
             	 </c:forEach>
 
             	 <c:if test="${pageVO.next}">
 	            	 <!-- 아래 다음게시물링크 -->
 	            	 <li class="paginate_button page-item next" id="example2_next">
-	            	 <a href="<c:url value='/' />admin/member/list_member.do?page=${pageVO.endPage+1}&search_type=${pageVO.search_type}&search_keyword=${pageVO.search_keyword}" aria-controls="example2" data-dt-idx="7" tabindex="0" class="page-link">Next</a>
+	            	 <a href="<c:url value='/' />admin/authorrole/list_author.do?page=${pageVO.endPage+1}&search_type=${pageVO.search_type}&search_keyword=${pageVO.search_keyword}" aria-controls="example2" data-dt-idx="7" tabindex="0" class="page-link">Next</a>
 	            	 </li>
             	 </c:if>
             	 </ul>
