@@ -78,7 +78,7 @@
                   <c:forEach items="${authorRoleList}" var="vo">
                     <tr>
                       <td>
-	                      <a href="<c:url value='/admin/authorrole/view_authorrole.do?authorrole_id=${vo.AUTHORROLE_ID}&page=${pageVO.page}&search_type=${pageVO.search_type}&search_keyword=${search_keyword}' />">
+	                      <a href="<c:url value='/admin/authorrole/view_author.do?authorrole_id=${vo.AUTHORROLE_ID}&page=${pageVO.page}&search_type=${pageVO.search_type}&search_keyword=${search_keyword}' />">
 	                      ${vo.ROLE_PTTRN}
 	                      </a>
                       </td>

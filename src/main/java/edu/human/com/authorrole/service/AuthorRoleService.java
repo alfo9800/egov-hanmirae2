@@ -6,4 +6,5 @@ import edu.human.com.util.PageVO;
 
 public interface AuthorRoleService {
 	public List<AuthorRoleVO> selectAuthorRole(PageVO pageVO) throws Exception;
+	public AuthorRoleVO viewAuthorRole(int AUTHORROLE_ID) throws Exception;
 }

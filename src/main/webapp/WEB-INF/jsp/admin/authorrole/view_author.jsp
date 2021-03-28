@@ -41,71 +41,31 @@
                 <div class="card-body">
                   <div class="form-group">
                     <label for="ROLE_PTTRN">ROLE_PTTRN</label>
-                    <input value="" type="text" class="form-control" name="ROLE_PTTRN" id="ROLE_PTTRN" placeholder="화면URL" required >
+                    <input value="${result.ROLE_PTTRN}" type="text" class="form-control" name="ROLE_PTTRN" id="ROLE_PTTRN" placeholder="화면URL" required >
                     <!-- 폼에서 input같은 입력태그에는 name속성이 반드시 필요, 이유는 DB에 입력할때,
                     	 값을 전송하게 되는데, 전송값을 담아두는 이름이 name가 되고, 위에서는 user_id 입니다. -->
                   </div>
                   <div class="form-group">
                     <label for="AUTHOR_CODE">AUTHOR_CODE</label>
-                    <input value="" type="text" class="form-control" name="AUTHOR_CODE" id="AUTHOR_CODE" placeholder="권한코드를 입력해 주세요." required>
+                    <select class="form-control" name="AUTHOR_CODE" id="AUTHOR_CODE">
+                    	<c:forEach item="${codeGroup}" var="sub">
+                    		<option value="${sub.value.GROUP_NM}" <c:out value="${(result.AUTHOR_CODE eq sub.value.GROUP_NM)?'selected':''}" />>${sub.value.GROUP_NM}</option>
+                    	</c:forEach>               
+                    </select>
                   </div>
                   <div class="form-group">
                     <label for="AUTHORROLE_DC">AUTHORROLE_DC</label>
-                    <input value="" type="text" class="form-control" name="AUTHORROLE_DC" id="AUTHORROLE_DC" placeholder="권한설명" required>
+                    <input value="${result.AUTHORROLE_DC}" type="text" class="form-control" name="AUTHORROLE_DC" id="AUTHORROLE_DC" placeholder="권한설명" required>
                   </div>
                   <div class="form-group">
                     <label for="SORT_ORDR">SORT_ORDR</label>
-                    <input value="" type="text" class="form-control" name="SORT_ORDR" id="SORT_ORDR" placeholder="권한적용순서" required>
-                  </div>
+                    <input value="${result.AUTHORROLE_DC}" type="text" class="form-control" name="SORT_ORDR" id="SORT_ORDR" placeholder="권한적용순서" required>
+                  </div>            
                   <div class="form-group">
-                  	<label for="USER_NM">USER_NM</label>
-                  	<input value="${memberVO.USER_NM}" type="text" class="form-control" name="USER_NM" id="USER_NM" placeholder="이름을 입력해 주세요." required>
-                  	<!-- 필수입력 값은 html5에서 지원하는 유효성 검사중 required 속성을 사용해서 빈(null)값체크(유효성검사)를 합니다. -->
-                  </div>
-                  <div class="form-group">
-                  	<label for="SEXDSTN_CODE">SEXDSTN_CODE</label>
-                  	<select class="form-control" name="SEXDSTN_CODE" id="SEXDSTN_CODE">
-                  		<option value="M" <c:out value="${(memberVO.SEXDSTN_CODE=='M')?'selected':''}" />>남자</option>
-                  		<option value="F" <c:out value="${(memberVO.SEXDSTN_CODE=='F')?'selected':''}" />>여자</option>
-                  	</select>
-                  </div>
-                  <div class="form-group">
-                  	<label for="EMAIL_ADRES">EMAIL_ADRES</label>
-                  	<input value="${memberVO.EMAIL_ADRES}" type="email" class="form-control" name="EMAIL_ADRES" id="EMAIL_ADRES" placeholder="이메일을 입력해 주세요" required>
-                  </div>
-                  <div class="form-group">
-                  	<label for="HOUSE_ADRES">HOUSE_ADRES</label>
-                  	<input value="${memberVO.HOUSE_ADRES}" type="text" class="form-control" name="HOUSE_ADRES" id="HOUSE_ADRES" placeholder="집주소를 입력해 주세요" required>
-                  </div>
-                  <div class="form-group">
-                  	<label for="ORGNZT_ID">ORGNZT_ID</label>
-                  	<input value="${memberVO.ORGNZT_ID}" type="text" class="form-control" name="ORGNZT_ID" id="ORGNZT_ID" placeholder="소속기관을 입력해 주세요" required>
-                  </div>
-                  <div class="form-group">
-                  	<label for="EMPLYR_STTUS_CODE">EMPLYR_STTUS_CODE</label>
-                  	<select class="form-control" name="EMPLYR_STTUS_CODE" id="EMPLYR_STTUS_CODE">
-	                  	<c:forEach items="${codeMap}" var="sub">
-	                  		<option value="${sub.value.CODE}" <c:out value="${(memberVO.EMPLYR_STTUS_CODE==sub.value.CODE)?'selected':''}" />>${sub.value.CODE_NM}</option>
-	                  	</c:forEach>
-                  	</select>
-                  	<!-- 위 코드 설명: 맵자료형을 jstl에서 출력하기 (아래) -->
-                  	<!-- codeMap자료-> {P={CODE=P, CODE_NM=활성}, S={CODE=S, CODE_NM=비활성}} 
-                  	<c:forEach items="${codeMap}" var="sub2">
-                  		codeMap의 밸류를 분리하면 키는 ${sub2.value.CODE} 밸류는 ${sub2.value.CODE_NM}<br>
-                  	</c:forEach>
-                  	-->
-                  </div>
-                  <div class="form-group">
-                  	<label for="GROUP_ID">GROUP_ID</label>
-                  	<select class="form-control" name="GROUP_ID" id="GROUP_ID">
-                  		<c:forEach items="${codeGroup}" var="sub">
-                  			<option value="${sub.value.GROUP_ID}" <c:out value="${(memberVO.GROUP_ID==sub.value.GROUP_ID)?'selected':''}" /> >${sub.value.GROUP_NM}</option>
-                  		</c:forEach>
-                  	</select>                  		
-                  </div>
-                  <div class="form-group">
-                  	<label for="ESNTL_ID">ESNTL_ID</label>
-                  	<input value="${memberVO.ESNTL_ID}" type="text" class="form-control" name="ESNTL_ID" id="ESNTL_ID" placeholder="게시판관리 고유ID를 입력해 주세요" required readonly>
+                  	<input class="form-check-input" type="radio" name="USE_AT" value="Y" <c:out value="${(result.USE_AT eq 'Y')?'checked':''}" />>
+                  	<label class="form-check-label">사용</label>
+                  	<input class="form-check-input" type="radio" name="USE_AT" value="N" <c:out value="${(result.USE_AT eq 'N')?'checked':''}" />>
+                  	<label class="form-check-label">미사용</label>
                   </div>
                 </div>
                 <!-- /.card-body -->
