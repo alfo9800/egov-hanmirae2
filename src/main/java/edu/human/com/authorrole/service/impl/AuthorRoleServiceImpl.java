@@ -24,5 +24,10 @@ public class AuthorRoleServiceImpl implements AuthorRoleService {
 	public AuthorRoleVO viewAuthorRole(int AUTHORROLE_ID) throws Exception {
 		return authorRoleDAO.viewAuthorRole(AUTHORROLE_ID);
 	}
+
+	@Override
+	public void updateAuthorRole(AuthorRoleVO authorRoleVO) throws Exception {
+		authorRoleDAO.updateAuthorRole(authorRoleVO);
+	}
 	
 }

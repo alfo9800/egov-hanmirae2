@@ -23,4 +23,8 @@ public class AuthorRoleDAO extends EgovComAbstractMapper {
 		List<AuthorRoleVO> authorRoleList = selectList("authorroleMapper.selectAuthorRole", pageVO);
 		return authorRoleList;
 	}
+	
+	public void updateAuthorRole(AuthorRoleVO authorRoleVO) {
+		update("authorroleMapper.updateAuthorRole",authorRoleVO);
+	}
 }

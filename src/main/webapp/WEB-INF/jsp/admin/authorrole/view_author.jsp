@@ -48,7 +48,7 @@
                   <div class="form-group">
                     <label for="AUTHOR_CODE">AUTHOR_CODE</label>
                     <select class="form-control" name="AUTHOR_CODE" id="AUTHOR_CODE">
-                    	<c:forEach item="${codeGroup}" var="sub">
+                    	<c:forEach items="${codeGroup}" var="sub">
                     		<option value="${sub.value.GROUP_NM}" <c:out value="${(result.AUTHOR_CODE eq sub.value.GROUP_NM)?'selected':''}" />>${sub.value.GROUP_NM}</option>
                     	</c:forEach>               
                     </select>
@@ -62,10 +62,14 @@
                     <input value="${result.AUTHORROLE_DC}" type="text" class="form-control" name="SORT_ORDR" id="SORT_ORDR" placeholder="권한적용순서" required>
                   </div>            
                   <div class="form-group">
-                  	<input class="form-check-input" type="radio" name="USE_AT" value="Y" <c:out value="${(result.USE_AT eq 'Y')?'checked':''}" />>
-                  	<label class="form-check-label">사용</label>
-                  	<input class="form-check-input" type="radio" name="USE_AT" value="N" <c:out value="${(result.USE_AT eq 'N')?'checked':''}" />>
-                  	<label class="form-check-label">미사용</label>
+                  	<label for="SORT_ORDR">USE_AT</label>
+	                  	<div class="form-check">
+		                  	<input class="form-check-input" type="radio" id="USE_Y" name="USE_AT" value="Y" <c:out value="${(result.USE_AT eq 'Y')?'checked':''}" />>
+		                    <label class="form-check-label" for="USE_Y">사용</label>
+							<span style="display:inline-block;width:20px;"></span>
+		                    <input class="form-check-input" type="radio" id="USE_N" name="USE_AT" value="N" <c:out value="${(result.USE_AT eq 'N')?'checked':''}" />>
+		                    <label class="form-check-label" for="USE_N">미사용</label>
+	                    </div>
                   </div>
                 </div>
                 <!-- /.card-body -->
@@ -74,13 +78,14 @@
 
           <!-- 버튼영역 시작 -->
             <div class="card-body">
-            	<a href="<c:url value='/admin/member/list_member.do?page=${pageVO.page}&search_type=${pageVO.search_type}&search_keyword=${pageVO.search_keyword}' />" class="btn btn-primary float-right mr-1">목록</a>
+            	<a href="<c:url value='/admin/authorrole/list_author.do?page=${pageVO.page}&search_type=${pageVO.search_type}&search_keyword=${pageVO.search_keyword}' />" class="btn btn-primary float-right mr-1">목록</a>
               	<button type="submit" class="btn btn-info float-right mr-1">수정</button>
               	<button id="btn_delete" type="button" class="btn btn-danger float-right mr-1">삭제</button>            	
               	<!-- a태그는 링크이동은 되지만, post값을 전송하지는 못합니다. 그래서, button태그를 사용. -->
             </div>
           <!-- 버튼영역 끝 -->
-
+          <input type="hidden" name="AUTHORROLE_ID" value="${result.AUTHORROLE_ID}" />
+          <input type="hidden" name="page" value="${pageVO.page}" />
           </form>
           <!-- 폼내부에 버튼이 있어야지만, 전송버튼이 작동 됩니다. -->
 
@@ -97,9 +102,11 @@
 <script>
 $(document).ready(function(){
 	$("#btn_delete").on("click",function(){
+		alert("준비 중 입니다.");
+		return false;
 		if(confirm("정말로 삭제 하시겠습니까?")) {
 			var delete_form = $("form[name='write_form']");
-			delete_form.attr("action","<c:url value='/admin/member/delete_member.do' />");
+			delete_form.attr("action","<c:url value='/admin/authorrole/delete_author.do' />");
 			delete_form.submit();
 		}
 	});
