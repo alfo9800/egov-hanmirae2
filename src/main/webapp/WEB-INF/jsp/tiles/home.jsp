@@ -4,15 +4,41 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <style>
+<%-- 미디어쿼리 all(print,screen 등등), min-width:가로크기 태블릿 이상일 경우만 적용 --%>
+@media all and (min-width:801px) {
+	.fix_height {
+		height: 440px;
+		line-height: 440px;
+	}
+}
 .img_topplace { 
-	opacity:0.7;
-	height:238px; 
+	opacity:0.7; 
 }
 .img_topplace:hover {
 	opacity:1.0;
 }
 </style>
-
+<script>
+$(function(){
+	//var w = JQuery(window).width();
+	//위 미디어 쿼리랑 같은 내용.(style을 jQuery로 구현하기)
+	//페이지 로딩 시 1회만 실행
+	var w = $(window).width();
+	if(w>801){
+		$(".fix_height").css({"height":(w/3)+"px","line-height":(w/3)+"px"});
+	}
+	//창 리사이징 이벤트가 발생 시 ==> 반응형 코딩 추가 (사용자 창 크기를 마음대로 조정 시 height값을 자동 조정되게)
+	$(window).resize(function(){
+		var w = $(window).width();
+		console.log("디버그: "+w);
+		if(w>801){
+			$(".fix_height").css({"height":(w/3)+"px","line-height":(w/3)+"px"});
+		}else{
+			$(".fix_height").css({"height":"inherit","line-height":"inherit"});
+		}
+	});
+});
+</script>
 	<!-- 메인콘텐츠영역 -->
 	<div id="container">
 		<!-- 모바일+PC 공통슬라이드영역 -->
@@ -23,7 +49,7 @@
                     <li class="imglist0">
                         <div class="roll_content">
                             <a href="javascript:;">
-							<p class="roll_txtline">OOOO OOOOOOOOO OOOOOOOOO OOOOO</p>
+							<p class="roll_txtline">나무 한 그루의 힘이 지구의 힘이 됩니다</p>
 							</a>
                         </div>
                     </li>
@@ -70,12 +96,16 @@
 					<c:forEach items="${galleryList}" var="galleryVO">
 						<li class="view_detail" style="cursor:pointer">
 							<form name="view_form" action="<c:url value='/tiles/board/view_board.do' />" method="post">			
-								<c:if test="${empty galleryVO.atchFileId}">
-									<img class="img_topplace" src="<c:url value='/' />resources/home/img/no_image.png" alt="OOOO OOOOO" />
-								</c:if>
-								<c:if test="${not empty galleryVO.atchFileId}">
-									<img class="img_topplace" src="<c:url value='/tiles/board/previewImage.do' />?atchFileId=${galleryVO.atchFileId}" />
-								</c:if>
+								
+								<div class="fox_height">								
+									<c:if test="${empty galleryVO.atchFileId}">
+										<img class="img_topplace" src="<c:url value='/' />resources/home/img/no_image.png" alt="OOOO OOOOO" />
+									</c:if>
+									<c:if test="${not empty galleryVO.atchFileId}">
+										<img class="img_topplace" src="<c:url value='/tiles/board/previewImage.do' />?atchFileId=${galleryVO.atchFileId}" />
+									</c:if>									
+								</div>
+								
 								<h3>${galleryVO.nttSj}</h3>
 								<p class="txt">
 									<%-- 기본처리(아래)
