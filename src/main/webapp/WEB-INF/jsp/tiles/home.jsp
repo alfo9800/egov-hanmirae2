@@ -56,7 +56,7 @@ $(function(){
                     <li class="imglist1">
                         <div class="roll_content">
                             <a href="javascript:;">
-							<p class="roll_txtline">OOOO OOOOOOOOO OOOOOOOOO OOOOO</p>
+							<p class="roll_txtline">에코퓨처는 환경을 우선으로 생각하는 기업입니다</p>
 							</a>
                         </div>
                     </li>
