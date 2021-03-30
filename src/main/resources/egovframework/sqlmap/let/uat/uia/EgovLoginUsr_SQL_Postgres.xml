@@ -17,7 +17,7 @@
 		<result property="orgnztId" column="orgnztId" columnIndex="7"/>
 		<result property="uniqId" column="uniqId" columnIndex="8"/>		
 	</resultMap>
-	
+
 	<!-- 아이디 찾기를 위한 resultMap 
 	<resultMap id="id" class="egovframework.com.cmm.LoginVO">
 		<result property="id" column="id" columnIndex="1"/>
@@ -47,7 +47,7 @@
 			]]>
 		</isEqual>
 	</select>
-	
+
 	<!-- 인증서 로그인
 	<select id="loginDAO.actionCrtfctLogin" resultMap="login">
 		<![CDATA[

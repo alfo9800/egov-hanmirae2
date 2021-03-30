@@ -40,7 +40,7 @@
                 ORGNZT_ID  LIKE  #detailConditionValue#
             </isEqual>
     </select>
-    
+
     <select id="CmmUseDAO.selectGroupIdDetail" parameterClass="ComDefaultCodeVO" resultMap="CmmCodeDetail">
             <![CDATA[ 
             SELECT 
@@ -56,6 +56,6 @@
                 GROUP_ID  LIKE  #detailConditionValue#
             </isEqual>
     </select>
-    
 
-</sqlMap>            
+
+</sqlMap>

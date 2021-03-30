@@ -41,11 +41,11 @@
 			 USE_AT, FRST_REGISTER_ID, FRST_REGIST_PNTTM )
 			VALUES
 			( #tmplatId#, #tmplatNm#, #tmplatSeCode#, #tmplatCours#, 
-			  #useAt#, #frstRegisterId#, SYSDATE()  
+			  #useAt#, #frstRegisterId#, current_timestamp  
 			 )			
 		]]>
 	</insert>
-	
+
 	<select id="TemplateManageDAO.selectTemplateInfs" parameterClass="TemplateInfVO" resultMap="tmplatList" >
 		<![CDATA[
 			SELECT 
@@ -75,7 +75,7 @@
 			LIMIT #recordCountPerPage# OFFSET #firstIndex#
 		]]>
 	</select>	
-	
+
 	<select id="TemplateManageDAO.selectTemplateInfsCnt" parameterClass="TemplateInfVO" resultClass="java.lang.Integer" >
 		<![CDATA[
 			SELECT 
@@ -99,7 +99,7 @@
 				<![CDATA[	c.CODE_NM LIKE CONCAT ('%', #searchWrd#,'%') 		]]>
 			</isEqual>		
 	</select>	
- 
+
 	<select id="TemplateManageDAO.selectTemplateInf" parameterClass="TemplateInfVO" resultMap="tmplatDetail" >
 		<![CDATA[
 			SELECT 
@@ -122,7 +122,7 @@
 				a.TMPLAT_ID = #tmplatId#
 		]]>				
 	</select> 
- 
+
  	<update id="TemplateManageDAO.updateTemplateInf" parameterClass="TemplateInf">
  		<![CDATA[
 			UPDATE LETTNTMPLATINFO SET 
@@ -130,17 +130,17 @@
 				TMPLAT_COURS = #tmplatCours#, 
 				USE_AT = #useAt#,
 				LAST_UPDUSR_ID = #lastUpdusrId#,
-				LAST_UPDT_PNTTM = SYSDATE()
+				LAST_UPDT_PNTTM = current_timestamp
 			WHERE TMPLAT_ID = #tmplatId#
  		]]>
  	</update>
-			 
+
  	<update id="TemplateManageDAO.deleteTemplateInf" parameterClass="TemplateInf">
  		<![CDATA[
 			UPDATE LETTNBBSMASTER SET 
 				USE_AT = 'N',
 				LAST_UPDUSR_ID = #lastUpdusrId#,
-				LAST_UPDT_PNTTM = SYSDATE()
+				LAST_UPDT_PNTTM = current_timestamp
 			WHERE TMPLAT_ID = #tmplatId#
  		]]>
  	</update>

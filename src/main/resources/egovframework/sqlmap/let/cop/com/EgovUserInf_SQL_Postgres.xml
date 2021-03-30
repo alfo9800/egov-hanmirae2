@@ -14,7 +14,7 @@
 		<result property="userAdres" column="USER_ADRES" columnIndex="5"/>
 		<result property="userEmail" column="USER_EMAIL" columnIndex="6"/>
 	</resultMap>
-	
+
 	<resultMap id="UserInfList" class="egovframework.let.cop.com.service.UserInfVO">
 		<result property="uniqId" column="ESNTL_ID" columnIndex="1"/>
 		<result property="userId" column="USER_ID" columnIndex="2"/>
@@ -25,7 +25,7 @@
 		<result property="useAt" column="USE_AT" columnIndex="7"/>
 		<result property="deletedAt" column="DELETED_AT" columnIndex="8"/>
 	</resultMap>
-	
+
 	<resultMap id="AllUserInfList" class="egovframework.let.cop.com.service.UserInfVO">
 		<result property="uniqId" column="ESNTL_ID" columnIndex="1"/>
 		<result property="trgetId" column="TRGET_ID" columnIndex="2"/>
@@ -47,7 +47,7 @@
 			LIMIT #recordCountPerPage# OFFSET #firstIndex#
 		]]>					
  	</select>
- 	
+
 	<select id="EgovUserInfManageDAO.selectUserListCnt" parameterClass="UserInfVO" resultClass="java.lang.Integer" >
 		<![CDATA[
 			SELECT 
@@ -60,7 +60,7 @@
 				<![CDATA[	USER_NM LIKE CONCAT ('%', #searchWrd#,'%') 		]]>
 			</isEqual>		
 	</select>	
- 
+
 	<select id="EgovUserInfManageDAO.selectCmmntyUserList" parameterClass="UserInfVO" resultMap="UserInfList" >
  		<![CDATA[
 			SELECT 
@@ -81,7 +81,7 @@
 			LIMIT #recordCountPerPage# OFFSET #firstIndex#
 		]]>				
  	</select>
- 	
+
 	<select id="EgovUserInfManageDAO.selectCmmntyUserListCnt" parameterClass="UserInfVO" resultClass="java.lang.Integer" >
 		<![CDATA[
 			SELECT 
@@ -97,7 +97,7 @@
 				<![CDATA[	a.USER_NM LIKE CONCAT ('%', #searchWrd#,'%') 		]]>
 			</isEqual>		
 	</select>
- 
+
 
 	<select id="EgovUserInfManageDAO.selectCmmntyMngrList" parameterClass="UserInfVO" resultMap="UserInfList" >
  		<![CDATA[
@@ -121,7 +121,7 @@
 			LIMIT #recordCountPerPage# OFFSET #firstIndex#
 		]]>				
  	</select>
- 	
+
 	<select id="EgovUserInfManageDAO.selectCmmntyMngrListCnt" parameterClass="UserInfVO" resultClass="java.lang.Integer" >
 		<![CDATA[
 			SELECT 
@@ -139,7 +139,7 @@
 				<![CDATA[	a.USER_NM LIKE CONCAT ('%', #searchWrd#,'%') 		]]>
 			</isEqual>		
 	</select>
-	
+
 
 	<select id="EgovUserInfManageDAO.selectClubUserList" parameterClass="UserInfVO" resultMap="UserInfList" >
  		<![CDATA[
@@ -161,7 +161,7 @@
 			LIMIT #recordCountPerPage# OFFSET #firstIndex#
 		]]>				
  	</select>
- 	
+
 	<select id="EgovUserInfManageDAO.selectClubUserListCnt" parameterClass="UserInfVO" resultClass="java.lang.Integer" >
 		<![CDATA[
 			SELECT 
@@ -200,7 +200,7 @@
 			LIMIT #recordCountPerPage# OFFSET #firstIndex#
 		]]>				
  	</select>
- 	
+
 	<select id="EgovUserInfManageDAO.selectClubOprtrListCnt" parameterClass="UserInfVO" resultClass="java.lang.Integer" >
 		<![CDATA[
 			SELECT 
@@ -226,7 +226,7 @@
 			AND CLB_ID = #trgetId#			
 		]]>
 	</select>
-	
+
 	<select id="EgovUserInfManageDAO.selectAllCmmntyUser" parameterClass="UserInfVO" resultMap="AllUserInfList" >
 		<![CDATA[
 			SELECT EMPLYR_ID as ESNTL_ID, CMMNTY_ID as TRGET_ID 

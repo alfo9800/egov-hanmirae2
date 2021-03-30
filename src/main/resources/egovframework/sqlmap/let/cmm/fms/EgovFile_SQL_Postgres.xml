@@ -46,16 +46,16 @@
 			ORDER BY b.FILE_SN	
  		]]>
  	</select>
- 	
+
 	<insert id="FileManageDAO.insertFileMaster" parameterClass="FileVO" >
 		<![CDATA[
 			INSERT INTO LETTNFILE
 			(ATCH_FILE_ID, CREAT_DT, USE_AT)
 			VALUES
-			( #atchFileId#, SYSDATE(), 'Y')			
+			( #atchFileId#, current_timestamp, 'Y')			
 		]]>
 	</insert>
-	
+
 	<insert id="FileManageDAO.insertFileDetail" parameterClass="FileVO" >
 		<![CDATA[
 			INSERT INTO LETTNFILEDETAIL
@@ -66,7 +66,7 @@
 			  #orignlFileNm#, #fileExtsn#, #fileMg#, #fileCn# )			
 		]]>
 	</insert>	
-	
+
 	<delete id="FileManageDAO.deleteFileDetail" parameterClass="FileVO" >
 		<![CDATA[
 			DELETE FROM LETTNFILEDETAIL
@@ -76,10 +76,10 @@
 				FILE_SN = #fileSn#			
 		]]>	
 	</delete>
- 	
+
 	<select id="FileManageDAO.getMaxFileSN" parameterClass="FileVO" resultClass="java.lang.Integer">
 		<![CDATA[
-			SELECT IFNULL(MAX(FILE_SN),0)+1 AS FILE_SN
+			SELECT COALESCE(MAX(FILE_SN),0)+1 AS FILE_SN
 			FROM LETTNFILEDETAIL
 			WHERE ATCH_FILE_ID =  #atchFileId#		
 		]]>
@@ -149,7 +149,7 @@
 				<![CDATA[	b.ORIGNL_FILE_NM LIKE CONCAT ('%', #searchWrd#,'%') 		]]>
 			</isEqual>	 		
  	</select>
- 	
+
   	<select id="FileManageDAO.selectImageFileList" parameterClass="FileVO" resultMap="fileList" >
  		<![CDATA[
 			SELECT 
@@ -168,5 +168,5 @@
 			ORDER BY b.FILE_SN	
  		]]>
  	</select>	
- 	
+
 </sqlMap>

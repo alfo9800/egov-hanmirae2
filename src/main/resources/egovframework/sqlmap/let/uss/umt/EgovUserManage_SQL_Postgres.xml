@@ -39,7 +39,7 @@ FROM(
         ORDER BY sbscrbDe DESC
         LIMIT #recordCountPerPage# OFFSET #firstIndex#
     </select>
-    
+
     <select id="userManageDAO.selectUserListTotCnt_S" parameterClass="userSearchVO" resultClass="int">
             SELECT COUNT(1) totcnt
             FROM(
@@ -69,7 +69,7 @@ FROM(
                 userNm LIKE '%' #searchKeyword# '%'
             </isEqual>
     </select>
-    
+
     <insert id="userManageDAO.insertUser_S">
         <![CDATA[
             INSERT INTO LETTNEMPLYRINFO 
@@ -126,18 +126,18 @@ FROM(
                     #orgnztId#          ,
                     #insttCode#         ,
                     #emplyrSttusCode#   ,
-                    sysdate()           ,
+                    current_timestamp           ,
                     #subDn#             )
         ]]>
     </insert>
-    
+
     <delete id="userManageDAO.deleteUser_S">
         <![CDATA[
             DELETE FROM LETTNEMPLYRINFO 
             WHERE ESNTL_ID=#delId#
         ]]>
     </delete>
-    
+
     <select id="userManageDAO.selectUser_S" resultClass="userVO">
         <![CDATA[
             SELECT
@@ -173,7 +173,7 @@ FROM(
             WHERE ESNTL_ID=#uniqId#
         ]]>
     </select>
-    
+
     <update id="userManageDAO.updateUser_S">
         <![CDATA[
             UPDATE LETTNEMPLYRINFO 
@@ -204,7 +204,7 @@ FROM(
             WHERE ESNTL_ID = #uniqId#
         ]]>
     </update>
-    
+
     <insert id="userManageDAO.insertUserHistory_S">
         <![CDATA[
             INSERT INTO LETTHEMPLYRINFOCHANGEDTLS 
@@ -253,7 +253,7 @@ FROM(
             WHERE ESNTL_ID = #uniqId#
         ]]>
     </insert>
-    
+
     <select id="userManageDAO.checkIdDplct_S" resultClass="int">
         <![CDATA[
             SELECT COUNT(1) usedCnt
@@ -273,7 +273,7 @@ FROM(
             WHERE userId = #checkId#
         ]]>
     </select>
-    
+
     <update id="userManageDAO.updatePassword_S">
         <![CDATA[
             UPDATE LETTNEMPLYRINFO 
@@ -282,7 +282,7 @@ FROM(
             WHERE  ESNTL_ID  = #uniqId#
         ]]>
     </update>
-    
+
     <select id="userManageDAO.selectPassword_S" resultClass="userVO">
         <![CDATA[
             SELECT
@@ -291,5 +291,5 @@ FROM(
             WHERE   ESNTL_ID=#uniqId#
         ]]>
     </select>
-    
+
 </sqlMap>

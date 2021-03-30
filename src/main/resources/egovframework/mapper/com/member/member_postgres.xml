@@ -8,7 +8,7 @@ order by group_dc asc
 </select>
 
 <select id="selectCodeMap" resultType="java.util.HashMap">
-select code, code_nm
+select code, code_nm 
 from lettccmmndetailcode 
 where code_id = #{code_id}
 </select>
@@ -34,7 +34,7 @@ where
 	</if>
 </if> 
 order by sbscrb_de desc
-LIMIT #{queryStartNo},#{queryPerPageNum}
+LIMIT #{queryPerPageNum} OFFSET #{queryStartNo}
 </select>
 
 <select id="viewMember" resultType="edu.human.com.member.service.EmployerInfoVO">

@@ -13,7 +13,7 @@
 		<result property="schdulSe" column="SCHDUL_SE" columnIndex="2"/>
 		<result property="schdulDeptId" column="SCHDUL_DEPT_ID" columnIndex="3"/>
 		<result property="schdulDeptName" column="SCHDUL_DEPT_NAME" columnIndex="4"/>
-		
+
 		<result property="schdulKindCode" column="SCHDUL_KND_CODE" columnIndex="5"/>
 		<result property="schdulBgnde" column="SCHDUL_BEGINDE" columnIndex="6"/>
 		<result property="schdulEndde" column="SCHDUL_ENDDE" columnIndex="7"/>
@@ -23,7 +23,7 @@
 		<result property="schdulIpcrCode" column="SCHDUL_IPCR_CODE" columnIndex="11"/>
 		<result property="schdulChargerId" column="SCHDUL_CHARGER_ID" columnIndex="12"/>
 		<result property="schdulChargerName" column="SCHDUL_CHARGER_NAME" columnIndex="13"/>
-		
+
 		<result property="atchFileId" column="ATCH_FILE_ID" columnIndex="14"/>
 		<result property="reptitSeCode" column="REPTIT_SE_CODE" columnIndex="15"/>    
 		<result property="frstRegisterPnttm" column="FRST_REGIST_PNTTM" columnIndex="16" />
@@ -31,24 +31,24 @@
 		<result property="lastUpdusrPnttm" column="LAST_UPDT_PNTTM" columnIndex="18"/>
 		<result property="lastUpdusrId" column="LAST_UPDUSR_ID" columnIndex="19" />				
 	</resultMap>
-	
+
 	<!-- 메인페이지/일정관리조회 -->  
 	<select id="IndvdlSchdulManage.selectIndvdlSchdulManageMainList" parameterClass="java.util.Map" resultClass="egovMap">
 		SELECT 
-			DATE_FORMAT(sysdate(),'%Y-%m-%d') TO_DAY, 
+			TO_CHAR(current_timestamp,'YYYY-MM-DD') TO_DAY, 
 			A.SCHDUL_ID,
 			A.SCHDUL_SE,
 			A.SCHDUL_DEPT_ID,
 			A.SCHDUL_KND_CODE,
-			DATE_FORMAT(A.SCHDUL_BEGINDE, '%Y%m%d%H%i')SCHDUL_BGNDE,
-            DATE_FORMAT(A.SCHDUL_ENDDE, '%Y%m%d%H%i')SCHDUL_ENDDE,
+			TO_CHAR(A.SCHDUL_BEGINDE, 'YYYY-MM-DD HH24:MI')SCHDUL_BGNDE,
+            TO_CHAR(A.SCHDUL_ENDDE, 'YYYY-MM-DD HH24:MI')SCHDUL_ENDDE,
 			A.SCHDUL_NM,
 			A.SCHDUL_CN,
 			A.SCHDUL_PLACE,
 			A.SCHDUL_IPCR_CODE,
 			A.SCHDUL_CHARGER_ID,		
 			A.ATCH_FILE_ID,
-			DATE_FORMAT(A.FRST_REGIST_PNTTM,'%Y-%m-%d') FRST_REGIST_PNTTM,
+			TO_CHAR(A.FRST_REGIST_PNTTM,'YYYY-MM-DD') FRST_REGIST_PNTTM,
 			A.FRST_REGISTER_ID,
 			A.LAST_UPDT_PNTTM,
 			A.LAST_UPDUSR_ID,
@@ -57,19 +57,19 @@
 		WHERE 1=1 
 		AND A.SCHDUL_KND_CODE = '2'  
 		AND (A.SCHDUL_CHARGER_ID = #uniqId# OR A.FRST_REGISTER_ID = #uniqId#)  
-		
+
 		<![CDATA[
 		AND ( 
-		 ( SUBSTRING(A.SCHDUL_BEGINDE,1,8) > DATE_FORMAT(sysdate(),'%Y%m%d') AND SUBSTRING(A.SCHDUL_BEGINDE,1,8) <= DATE_FORMAT(sysdate(),'%Y%m%d'))
+		 ( SUBSTRING(A.SCHDUL_BEGINDE,1,8) > TO_CHAR(current_timestamp,'%Y%m%d') AND SUBSTRING(A.SCHDUL_BEGINDE,1,8) <= TO_CHAR(current_timestamp,'%Y%m%d'))
 		OR
-		 ( SUBSTRING(A.SCHDUL_ENDDE,1,8) >DATE_FORMAT(sysdate(),'%Y%m%d') AND SUBSTRING(A.SCHDUL_BEGINDE,1,8) <= DATE_FORMAT(sysdate(),'%Y%m%d'))
+		 ( SUBSTRING(A.SCHDUL_ENDDE,1,8) >TO_CHAR(current_timestamp,'%Y%m%d') AND SUBSTRING(A.SCHDUL_BEGINDE,1,8) <= TO_CHAR(current_timestamp,'%Y%m%d'))
 		) 
 		]]>
-		
+
 		ORDER BY A.FRST_REGIST_PNTTM DESC
 		LIMIT 0, 4 
 	</select>
-	
+
 	<!-- 개인일정정보::목록조회 -->
 	<select id="IndvdlSchdulManage.selectIndvdlSchdulManageRetrieve" parameterClass="java.util.Map" resultClass="egovMap">
 	 <![CDATA[
@@ -78,8 +78,8 @@
 			A.SCHDUL_SE,
 			A.SCHDUL_DEPT_ID,
 			A.SCHDUL_KND_CODE,
-			DATE_FORMAT(A.SCHDUL_BEGINDE, '%Y%m%d%H%i')SCHDUL_BGNDE,
-            DATE_FORMAT(A.SCHDUL_ENDDE, '%Y%m%d%H%i')SCHDUL_ENDDE,
+			TO_CHAR(A.SCHDUL_BEGINDE, 'YYYY-MM-DD HH24:MI')SCHDUL_BGNDE,
+            TO_CHAR(A.SCHDUL_ENDDE, 'YYYY-MM-DD HH24:MI')SCHDUL_ENDDE,
 			A.SCHDUL_NM,
 			A.SCHDUL_CN,
 			A.SCHDUL_PLACE,
@@ -97,26 +97,26 @@
 	 ]]>
 	 <isNotEmpty property="searchMode">
 	 <isEqual property="searchMode" compareValue="MONTH">
-	 
+
 		 <isNotEmpty property="searchMonth">
 		 	<isNotEqual property="searchMonth" compareValue="">
-		 	 AND (#searchMonth# BETWEEN SUBSTRING(DATE_FORMAT(A.SCHDUL_BEGINDE,'%Y%m%d'), 1, 6)  AND SUBSTRING(DATE_FORMAT(A.SCHDUL_ENDDE,'%Y%m%d'), 1, 6) ) 
+		 	 AND (#searchMonth# BETWEEN SUBSTRING(TO_CHAR(A.SCHDUL_BEGINDE,'%Y%m%d'), 1, 6)  AND SUBSTRING(TO_CHAR(A.SCHDUL_ENDDE,'%Y%m%d'), 1, 6) ) 
 		 	</isNotEqual>
 		 </isNotEmpty>
-	 
+
 	 </isEqual>
 	 <isEqual property="searchMode" compareValue="WEEK">
 	 <![CDATA[ 		 
 		AND ( 
-		 ( SUBSTRING(DATE_FORMAT(A.SCHDUL_BEGINDE,'%Y%m%d'),1,8) > #schdulBgnde# AND SUBSTRING(DATE_FORMAT(A.SCHDUL_BEGINDE,'%Y%m%d'),1,8) <= #schdulEndde#)
+		 ( SUBSTRING(TO_CHAR(A.SCHDUL_BEGINDE,'%Y%m%d'),1,8) > #schdulBgnde# AND SUBSTRING(TO_CHAR(A.SCHDUL_BEGINDE,'%Y%m%d'),1,8) <= #schdulEndde#)
 		OR
-		 ( SUBSTRING(DATE_FORMAT(A.SCHDUL_ENDDE,'%Y%m%d'),1,8) > #schdulBgnde# AND SUBSTRING(DATE_FORMAT(A.SCHDUL_BEGINDE,'%Y%m%d'),1,8) <= #schdulEndde#)
+		 ( SUBSTRING(TO_CHAR(A.SCHDUL_ENDDE,'%Y%m%d'),1,8) > #schdulBgnde# AND SUBSTRING(TO_CHAR(A.SCHDUL_BEGINDE,'%Y%m%d'),1,8) <= #schdulEndde#)
 		) 
 	]]>
 	 </isEqual>
 	 <isEqual property="searchMode" compareValue="DAILY">
 	 <![CDATA[
-	 	 AND (#searchDay# BETWEEN SUBSTRING(DATE_FORMAT(A.SCHDUL_BEGINDE,'%Y%m%d'), 1, 8)  AND SUBSTRING(DATE_FORMAT(A.SCHDUL_ENDDE,'%Y%m%d'), 1, 8) )
+	 	 AND (#searchDay# BETWEEN SUBSTRING(TO_CHAR(A.SCHDUL_BEGINDE,'%Y%m%d'), 1, 8)  AND SUBSTRING(TO_CHAR(A.SCHDUL_ENDDE,'%Y%m%d'), 1, 8) )
 	  ]]> 
 	 </isEqual>
 	 </isNotEmpty>
@@ -130,7 +130,7 @@
 	 </isNotEmpty>
 
 	</select>
-	
+
 	<!-- 개인일정정보::상세보기 -->
 	<select id="IndvdlSchdulManage.selectIndvdlSchdulManageDetailVO" resultMap="IndvdlSchdulManage">
 		SELECT 
@@ -139,8 +139,8 @@
 			A.SCHDUL_DEPT_ID,
 			(SELECT ORGNZT_NM FROM LETTNORGNZTINFO WHERE ORGNZT_ID = A.SCHDUL_DEPT_ID) SCHDUL_DEPT_NAME,
 			A.SCHDUL_KND_CODE,
-			DATE_FORMAT(A.SCHDUL_BEGINDE, '%Y%m%d%H%i')SCHDUL_BEGINDE,
-            DATE_FORMAT(A.SCHDUL_ENDDE, '%Y%m%d%H%i')SCHDUL_ENDDE,
+			TO_CHAR(A.SCHDUL_BEGINDE, 'YYYY-MM-DD HH24:MI')SCHDUL_BEGINDE,
+            TO_CHAR(A.SCHDUL_ENDDE, 'YYYY-MM-DD HH24:MI')SCHDUL_ENDDE,
 			A.SCHDUL_NM,
 			A.SCHDUL_CN,
 			A.SCHDUL_PLACE,
@@ -157,7 +157,7 @@
 		WHERE 1=1 
 		AND SCHDUL_ID = #schdulId#
 	</select>
-	
+
 	<!-- 개인일정정보::목록조회_게시물정보 -->
 	<select id="IndvdlSchdulManage.selectIndvdlSchdulManage" parameterClass="comDefaultVO" resultClass="egovMap">
 	 <![CDATA[
@@ -166,8 +166,8 @@
 			A.SCHDUL_SE,
 			A.SCHDUL_DEPT_ID,
 			A.SCHDUL_KND_CODE,
-			DATE_FORMAT(A.SCHDUL_BEGINDE, '%Y%m%d%H%i')SCHDUL_BGNDE,
-            DATE_FORMAT(A.SCHDUL_ENDDE, '%Y%m%d%H%i')SCHDUL_ENDDE,
+			TO_CHAR(A.SCHDUL_BEGINDE, 'YYYY-MM-DD HH24:MI')SCHDUL_BGNDE,
+            TO_CHAR(A.SCHDUL_ENDDE, 'YYYY-MM-DD HH24:MI')SCHDUL_ENDDE,
 			A.SCHDUL_NM,
 			A.SCHDUL_CN,
 			A.SCHDUL_PLACE,
@@ -194,7 +194,7 @@
 		LIMIT #recordCountPerPage# OFFSET #firstIndex#
 	]]>
 	</select>
-	
+
 	<!-- 개인일정정보::목록조회_게시물 총갯수  -->
 	<select id="IndvdlSchdulManage.selectIndvdlSchdulManageCnt" parameterClass="comDefaultVO" resultClass="int">
 		SELECT 
@@ -210,7 +210,7 @@
 	 </isNotEmpty>
 	</select>
 
-	
+
 	<!-- 개인일정정보::삭제  -->
 	<delete id="IndvdlSchdulManage.deleteDiaryManage">
 			DELETE FROM LETTNDIARYINFO WHERE SCHDUL_ID = #schdulId#;
@@ -236,11 +236,11 @@
 			SCHDUL_CHARGER_ID=#schdulChargerId#,
 			ATCH_FILE_ID=#atchFileId#,
 			REPTIT_SE_CODE=#reptitSeCode#,
-			LAST_UPDT_PNTTM = sysdate(),
+			LAST_UPDT_PNTTM = current_timestamp,
 			LAST_UPDUSR_ID = #lastUpdusrId#
 		WHERE SCHDUL_ID = #schdulId#
 	</update>
-	
+
 	<!-- 개인일정정보::상세보기 -->
 	<select id="IndvdlSchdulManage.selectIndvdlSchdulManageDetail" resultClass="egovMap">
 		SELECT 
@@ -249,8 +249,8 @@
 			A.SCHDUL_DEPT_ID,
 			(SELECT ORGNZT_NM FROM LETTNORGNZTINFO WHERE ORGNZT_ID = A.SCHDUL_DEPT_ID) SCHDUL_DEPT_NAME,
 			A.SCHDUL_KND_CODE,
-			DATE_FORMAT(A.SCHDUL_BEGINDE, '%Y%m%d%H%i')SCHDUL_BGNDE,
-            DATE_FORMAT(A.SCHDUL_ENDDE, '%Y%m%d%H%i')SCHDUL_ENDDE,
+			TO_CHAR(A.SCHDUL_BEGINDE, 'YYYY-MM-DD HH24:MI')SCHDUL_BGNDE,
+            TO_CHAR(A.SCHDUL_ENDDE, 'YYYY-MM-DD HH24:MI')SCHDUL_ENDDE,
 			A.SCHDUL_NM,
 			A.SCHDUL_CN,
 			A.SCHDUL_PLACE,
@@ -267,7 +267,7 @@
 		WHERE 1=1
 		AND SCHDUL_ID = #schdulId#
 	</select>
-	
+
 	<!-- 개인일정정보::입력  -->
 	<insert id="IndvdlSchdulManage.insertIndvdlSchdulManage">
 	 <![CDATA[
@@ -295,8 +295,8 @@
 			#schdulSe#,
 			#schdulDeptId#,
 			#schdulKindCode#,
-			STR_TO_DATE(DATE_FORMAT(#schdulBgnde#,'%Y %m %d %T'), '%Y %m %d %T'),
-			STR_TO_DATE(DATE_FORMAT(#schdulEndde#,'%Y %m %d %T'), '%Y %m %d %T'),
+			STR_TO_DATE(TO_CHAR(#schdulBgnde#,'%Y %m %d %T'), '%Y %m %d %T'),
+			STR_TO_DATE(TO_CHAR(#schdulEndde#,'%Y %m %d %T'), '%Y %m %d %T'),
 			#schdulNm#,
 			#schdulCn#,
 			#schdulPlace#,
@@ -304,12 +304,11 @@
 			#schdulChargerId#,
 			#atchFileId#,
 			#reptitSeCode#,    
-			sysdate(),
+			current_timestamp,
 			#frstRegisterId#,
-			sysdate(),
+			current_timestamp,
 			#lastUpdusrId# 
 		)
-
 	 ]]>
 	</insert>
 
