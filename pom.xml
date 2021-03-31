@@ -252,7 +252,8 @@
 			<groupId>javax.inject</groupId>
 			<artifactId>javax.inject</artifactId>
 			<version>1</version>
-		</dependency>		
+		</dependency>
+		
 		<!-- Tiles -->
 	    <dependency>
 	        <groupId>org.apache.tiles</groupId>
@@ -261,9 +262,9 @@
 	    </dependency>
 	    <!-- 스프링 시큐리티 모듈 추가 -->
 	    <dependency>
-		   <groupId>egovframework.rte</groupId>
-		   <artifactId>egovframework.rte.fdl.security</artifactId>
-		   <version>3.9.0</version>
+			<groupId>egovframework.rte</groupId>
+			<artifactId>egovframework.rte.fdl.security</artifactId>
+			<version>3.9.0</version>
 		</dependency>
 		<!-- postgreSQL 모듈 추가 -->
 		<dependency>
@@ -271,7 +272,7 @@
 		     <artifactId>postgresql</artifactId>
 		     <version>42.2.5</version>
 		</dependency>
-			    
+		
 	</dependencies>
 
     <build>
