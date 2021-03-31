@@ -59,7 +59,7 @@
                   </div>
                   <div class="form-group">
                     <label for="SORT_ORDR">SORT_ORDR</label>
-                    <input value="${result.AUTHORROLE_DC}" type="text" class="form-control" name="SORT_ORDR" id="SORT_ORDR" placeholder="권한적용순서" required>
+                    <input value="${result.SORT_ORDR}" type="text" class="form-control" name="SORT_ORDR" id="SORT_ORDR" placeholder="권한적용순서" required>
                   </div>            
                   <div class="form-group">
                   	<label for="SORT_ORDR">USE_AT</label>
