@@ -64,7 +64,7 @@
                   <div class="form-group">
                   <label for="SORT_ORDR">USE_AT</label>
                   	<div class="form-check">
-                  	<input class="form-check-input" type="radio" id="USE_Y" name="USE_AT" value="Y" selected>
+                  	<input class="form-check-input" type="radio" id="USE_Y" name="USE_AT" value="Y" checked>
                     <label class="form-check-label" for="USE_Y">사용</label>
 					<span style="display:inline-block;width:20px;"></span>
                     <input class="form-check-input" type="radio" id="USE_N" name="USE_AT" value="N" >
@@ -83,9 +83,6 @@
             	<a href="<c:url value='/admin/authorrole/list_author.do?page=${pageVO.page}&search_type=${pageVO.search_type}&search_keyword=${pageVO.search_keyword}' />" class="btn btn-primary float-right mr-1">목록</a>
               	<button type="submit" class="btn btn-info float-right mr-1">등록</button>
             </div>
-          <!-- 버튼영역 끝 -->
-          <input type="hidden" name="AUTHORROLE_ID" value="${result.AUTHORROLE_ID}" />
-          <input type="hidden" name="page" value="${pageVO.page}" />
           </form>
           <!-- 폼내부에 버튼이 있어야지만, 전송버튼이 작동 됩니다. -->
           

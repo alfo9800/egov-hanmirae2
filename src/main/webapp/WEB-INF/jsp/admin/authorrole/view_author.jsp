@@ -102,8 +102,8 @@
 <script>
 $(document).ready(function(){
 	$("#btn_delete").on("click",function(){
-		alert("준비 중 입니다.");
-		return false;
+		//alert("준비 중 입니다.");
+		//return false;
 		if(confirm("정말로 삭제 하시겠습니까?")) {
 			var delete_form = $("form[name='write_form']");
 			delete_form.attr("action","<c:url value='/admin/authorrole/delete_author.do' />");

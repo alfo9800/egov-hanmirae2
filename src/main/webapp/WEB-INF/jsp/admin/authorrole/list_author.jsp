@@ -99,7 +99,7 @@
 
             <!-- 버튼영역 시작 -->
               <div class="card-body">
-              	<a href="<c:url value='/admin/authorrole/insert_author.do' />" class="btn btn-primary float-right">등록</a>
+              	<a href="<c:url value='/admin/authorrole/insert_author_form.do' />" class="btn btn-primary float-right">등록</a>
               </div>
             <!-- 버튼영역 끝 -->
 
