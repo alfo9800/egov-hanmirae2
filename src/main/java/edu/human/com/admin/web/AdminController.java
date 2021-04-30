@@ -49,19 +49,19 @@ import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 
 @Controller
 public class AdminController {
+	
 	private Logger logger = Logger.getLogger(SimpleLog.class);
-	
-	
-	@Inject
-	private AuthorRoleDAO authorRoleDAO;
-	@Inject
-	private AuthorRoleService authorRoleService;
+	 
 	@Inject
 	private MemberService memberService;
 	@Inject
 	private CommonUtil commUtil;
 	@Inject
 	private BoardService boardService;
+	@Inject
+	private AuthorRoleService authorRoleService;
+	@Inject
+	private AuthorRoleDAO authorRoleDAO;
 	//스프링빈(new키워드만드는 오브젝트X) 오브젝트를 사용하는 방법 @Inject(자바8이상), @Autowired(많이사용), @Resource(자바7이하)
 	@Autowired
 	private EgovBBSAttributeManageService bbsAttrbService;
@@ -78,75 +78,66 @@ public class AdminController {
 	@Autowired
 	private EgovFileMngUtil fileUtil;
 	
-	//========================================================================================
-	//권한 관리 삭제하기 호출 POST
+	//권한 관리 삭제하기 호출POST
 	@RequestMapping(value="/admin/authorrole/delete_author.do",method=RequestMethod.POST)
 	public String delete_author(AuthorRoleVO authorRoleVO, RedirectAttributes rdat) throws Exception {
 		authorRoleService.deleteAuthorRole(authorRoleVO.getAUTHORROLE_ID());
-		rdat.addFlashAttribute("msg","삭제");
+		rdat.addFlashAttribute("msg", "삭제");
 		return "redirect:/admin/authorrole/list_author.do";
 	}
-	
-	//권한 관리 등록하기 호출 POST
+	//권한 관리 등록하기 호출POST
 	@RequestMapping(value="/admin/authorrole/insert_author.do",method=RequestMethod.POST)
 	public String insert_author(AuthorRoleVO authorRoleVO, RedirectAttributes rdat) throws Exception {
 		authorRoleService.insertAuthorRole(authorRoleVO);
 		rdat.addFlashAttribute("msg", "등록");
 		return "redirect:/admin/authorrole/list_author.do";
 	}
-	
-	//권한 관리 등록하기 호출 GET
+	//권한 관리 등록하기 호출GET
 	@RequestMapping(value="/admin/authorrole/insert_author_form.do",method=RequestMethod.GET)
-	public String insert_author_form(Model model) throws Exception {
-		
+	public String insert_author(Model model) throws Exception {
 		model.addAttribute("codeGroup", memberService.selectGroupMap());
 		return "admin/authorrole/insert_author";
 	}
-	
-	//권한 관리 수정하기 호출 POST
+	//권한 관리 수정하기 호출POST
 	@RequestMapping(value="/admin/authorrole/update_author.do",method=RequestMethod.POST)
-	public String update_author(RedirectAttributes rdat, AuthorRoleVO authorRoleVO, PageVO pageVO) throws Exception {
-		//업데이트 서비스 호출
+	public String update_author(RedirectAttributes rdat,AuthorRoleVO authorRoleVO,PageVO pageVO) throws Exception {
+		//업데이트 서비스호출
 		authorRoleService.updateAuthorRole(authorRoleVO);
 		rdat.addFlashAttribute("msg", "수정");
 		return "redirect:/admin/authorrole/view_author.do?page="+pageVO.getPage()+"&authorrole_id="+authorRoleVO.getAUTHORROLE_ID();
 	}
-	
-	//권한 관리 상세보기 호출 GET
+	//권한 관리 상세보기 호출GET
 	@RequestMapping(value="/admin/authorrole/view_author.do",method=RequestMethod.GET)
-	public String view_author(@RequestParam("authorrole_id") int authorrole_id, Model model, @ModelAttribute("pageVO") PageVO pageVO) throws Exception {
+	public String view_author(@RequestParam("authorrole_id") int authorrole_id, Model model,@ModelAttribute("pageVO") PageVO pageVO) throws Exception {
 		AuthorRoleVO authorRoleVO = authorRoleService.viewAuthorRole(authorrole_id);
 		model.addAttribute("result", authorRoleVO);
 		model.addAttribute("codeGroup", memberService.selectGroupMap());
 		return "admin/authorrole/view_author";
 	}
-	//권한 관리 리스트 호출 GET
+	//권한 관리 리스트 호출 GET 
 	@RequestMapping(value="/admin/authorrole/list_author.do",method=RequestMethod.GET)
-	public String list_author(Model model, @ModelAttribute("pageVO") PageVO pageVO) throws Exception {
+	public String list_author(Model model,@ModelAttribute("pageVO") PageVO pageVO) throws Exception {
 		//Get,Set VO생성
 		if(pageVO.getPage() == null) { pageVO.setPage(1); }
 		pageVO.setPerPageNum(5);//하단에 보여줄 페이지번호 개수
 		pageVO.setQueryPerPageNum(10);//한화면에 보여줄 레코드의 개수
-		
 		List<AuthorRoleVO> authorRoleList = authorRoleService.selectAuthorRole(pageVO);
-		int countAuthorRole = authorRoleDAO.countAuthorRole(pageVO);
-		pageVO.setTotalCount(countAuthorRole); //이 명령어에서 prev, next 등이 계산 됨.
-		logger.debug("디버그: 토탈 사이즈 "+countAuthorRole);
 		
-		model.addAttribute("authorRoleList",authorRoleList);
+		int countAuthorRole = authorRoleDAO.countAuthorRole(pageVO);
+		pageVO.setTotalCount(countAuthorRole);//이 명령어에서 prev,next 등이 계산이 됨.
+		logger.debug("디버그: 토탈 사이즈 "+countAuthorRole);
+		model.addAttribute("authorRoleList", authorRoleList);
 		return "admin/authorrole/list_author";
 	}
-	
-	//게시물 등록 폼화면 호출 GET/POST 2개 다 허용
+	//게시물 등록 폼화면 호출 GET/POST 2개다 허용
 	@RequestMapping("/admin/board/insert_board_form.do")
 	public String insert_board_form(@ModelAttribute("searchVO") BoardVO boardVO, ModelMap model) throws Exception {
 		// 사용자권한 처리 new
 		if(!commUtil.getAuthorities()) {
-			model.addAttribute("msg","관리자그룹만 접근이 가능합니다.\\n사용자홈페이지로 이동");
-
-		return "home.tiles";
+			model.addAttribute("msg", "관리자그룹만 접근이 가능합니다.\\n사용자홈페이지로 이동");
+	    	return "home.tiles";
 		}
-		
+
 	    LoginVO user = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
 		Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
 
@@ -171,19 +162,18 @@ public class AdminController {
 
 		model.addAttribute("brdMstrVO", bdMstr);
 		////-----------------------------
-		
+
 		return "admin/board/insert_board";
 	}
-	
-	//게시물 등록 처리 호출 POST
+	//게시물 등록 DAO처리 호출 POST
 	@RequestMapping("/admin/board/insert_board.do")
 	public String insert_board(final MultipartHttpServletRequest multiRequest, @ModelAttribute("searchVO") BoardVO boardVO,
-	    @ModelAttribute("bdMstr") BoardMaster bdMstr, @ModelAttribute("board") Board board, BindingResult bindingResult, SessionStatus status,
-	    ModelMap model) throws Exception {
+		    @ModelAttribute("bdMstr") BoardMaster bdMstr, @ModelAttribute("board") Board board, BindingResult bindingResult, SessionStatus status,
+		    ModelMap model) throws Exception {
 		// 사용자권한 처리 new
-		if(commUtil.getAuthorities()) {
-			model.addAttribute("msg", "관리자그룹만 접근이 가능합니다.\\n사용자 홈페이지로 이동");
-			 return "home.tiles";
+		if(!commUtil.getAuthorities()) {
+			model.addAttribute("msg", "관리자그룹만 접근이 가능합니다.\\n사용자홈페이지로 이동");
+	    	return "home.tiles";
 		}
 
 		LoginVO user = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
@@ -234,7 +224,6 @@ public class AdminController {
 
 		    bbsMngService.insertBoardArticle(board);
 		}
-		
 		return "redirect:/admin/board/list_board.do?bbsId="+board.getBbsId();
 	}
 	
@@ -245,9 +234,9 @@ public class AdminController {
 		    SessionStatus status) throws Exception {
 
 		// 사용자권한 처리 new
-		if(commUtil.getAuthorities()) {
-			model.addAttribute("msg", "관리자그룹만 접근이 가능합니다.\\n사용자 홈페이지로 이동");
-			 return "home.tiles";
+		if(!commUtil.getAuthorities()) {
+			model.addAttribute("msg", "관리자그룹만 접근이 가능합니다.\\n사용자홈페이지로 이동");
+	    	return "home.tiles";
 		}
 
 		LoginVO user = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
@@ -281,13 +270,13 @@ public class AdminController {
 		    if (!files.isEmpty()) {//첨부파일이 있을때 작동
 		    	//기존 첨부파일이 존재하지 않으면 신규등록
 				if ("".equals(atchFileId)) {
-				    System.out.println("디버그1"+atchFileId);
-					List<FileVO> result = fileUtil.parseFileInf(files, "BBS_", 0, atchFileId, "");
+					System.out.println("디버그1:-기존첨부파일이 없을경우 신규등록시 사용"+atchFileId);
+				    List<FileVO> result = fileUtil.parseFileInf(files, "BBS_", 0, atchFileId, "");
 				    atchFileId = fileMngService.insertFileInfs(result);
 				    board.setAtchFileId(atchFileId);
-				} else {//기본첨부파일이 존재하면 기존 삭제하고, 신규등록
-				    System.out.println("디버그2"+atchFileId);
-					FileVO fvo = new FileVO();
+				} else {//기본첨부파일이 존재하면 기존것 보존하고, 다시 신규등록
+					System.out.println("디버그2:"+atchFileId);
+				    FileVO fvo = new FileVO();
 				    fvo.setAtchFileId(atchFileId);
 				    int cnt = fileMngService.getMaxFileSN(fvo);
 				    List<FileVO> _result = fileUtil.parseFileInf(files, "BBS_", cnt, atchFileId, "");
@@ -303,18 +292,15 @@ public class AdminController {
 		    bbsMngService.updateBoardArticle(board);
 		}
 		
-	    BoardVO bdvo = new BoardVO();	
+	    BoardVO bdvo = new BoardVO();
 	    bdvo = bbsMngService.selectBoardArticle(boardVO);
 
-		
-		return "redirect:/admin/board/view_board.do?bbsId="+bdvo.getBbsId()
+	    return "redirect:/admin/board/view_board.do?bbsId="+bdvo.getBbsId()
 		+"&nttId="+bdvo.getNttId()+"&bbsTyCode="+bdvo.getBbsTyCode()
 		+"&bbsAttrbCode="+bdvo.getBbsAttrbCode()+"&authFlag=Y"
-		+"&pageIndex="+bdvo.getPageIndex();
-		 
+		+"&pageIndex="+bdvo.getPageIndex();	
 		//return "redirect:/admin/board/list_board.do?bbsId="+board.getBbsId();
 	}
-	
 	//게시물 수정 화면을 호출 POST
 	@RequestMapping("/admin/board/update_board_form.do")
 	public String update_board(@ModelAttribute("searchVO") BoardVO boardVO, @ModelAttribute("board") BoardVO vo, ModelMap model)
@@ -367,22 +353,20 @@ public class AdminController {
 			//fileVO.setAtchFileId(boardVO.getAtchFileId());
 			//fileMngService.deleteAllFileInf(fileVO);//USE_AT='N'삭제X
 			//물리파일지우려면 2가지값 필수: file_stre_cours, stre_file_nm
-			
-			//실제 폴더에서 파일도 삭제 (1개-> 여러개 삭제하는 로직 변경)
+			//실제 폴더에서 파일도 삭제(아래 1개만 삭제하는 로직 -> 여러개 삭제하는 로직 변경)
 			List<FileVO> fileList = fileMngService.selectFileInfs(fileVO);
 			for(FileVO oneFileVO:fileList) {
 				FileVO delfileVO = fileMngService.selectFileInf(oneFileVO);
-				File target = new File(delfileVO.getFileStreCours(),delfileVO.getStreFileNm());
+				File target = new File(delfileVO.getFileStreCours(), delfileVO.getStreFileNm());
 				if(target.exists()) {
 					target.delete();//폴더에서 기존첨부파일 지우기
 					System.out.println("디버그:첨부파일삭제OK");
 				}
 			}
-						
-			//첨부파일 레코드삭제
+			//첨부파일 레코드삭제(아래)
 			boardService.delete_attach(boardVO.getAtchFileId());//게시물에 딸린 첨부파일테이블 2개 레코드삭제
 		}
-		//게시물 레코드삭제
+		//게시물 레코드삭제(아래)
 		boardService.delete_board((int)boardVO.getNttId());
 		rdat.addFlashAttribute("msg", "삭제");
 		return "redirect:/admin/board/list_board.do?bbsId="+boardVO.getBbsId();
@@ -411,7 +395,7 @@ public class AdminController {
 		//시큐어코딩 시작(게시물제목/내용에서 자바스크립트 코드의 꺽쇠태그를 특수문자로 바꿔서 실행하지 못하는 코드로 변경)
 		//egov 저장할때, 시큐어코딩으로 저장하는 방식을 사용, 문제있음. 우리방식으로 적용
 		String subject = commUtil.unscript(vo.getNttSj());//게시물제목
-		String content = commUtil.unscript(vo.getNttCn());//게시물내용
+		String content = commUtil.unscript(vo.getNttCn());//개시물내용
 		vo.setNttSj(subject);
 		vo.setNttCn(content);
 		model.addAttribute("result", vo);
@@ -436,6 +420,7 @@ public class AdminController {
 		
 		return "admin/board/view_board";
 	}
+	
 	@RequestMapping("/admin/board/list_board.do")
 	public String list_board(@ModelAttribute("searchVO") BoardVO boardVO, ModelMap model) throws Exception {
 		LoginVO user = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
@@ -535,7 +520,7 @@ public class AdminController {
 	@RequestMapping(value="/admin/member/update_member.do",method=RequestMethod.POST)
 	public String update_member(EmployerInfoVO memberVO,RedirectAttributes rdat) throws Exception {
 		//회원 수정 페이지 DB처리
-		if(memberVO.getPASSWORD() != null && memberVO.getPASSWORD() !="") {
+		if(memberVO.getPASSWORD() != null && !"".equals(memberVO.getPASSWORD())) {
 			String formPassword = memberVO.getPASSWORD();//GET
 			String encPassword = EgovFileScrty.encryptPassword(formPassword, memberVO.getEMPLYR_ID());
 			memberVO.setPASSWORD(encPassword);//SET
@@ -563,12 +548,11 @@ public class AdminController {
 	}
 	@RequestMapping(value="/admin/home.do", method=RequestMethod.GET)
 	public String home(Model model) throws Exception {
-		//사용자권한 처리 new
+		// 사용자권한 처리 new
 		if(!commUtil.getAuthorities()) {
 			model.addAttribute("msg", "관리자그룹만 접근이 가능합니다.\\n사용자홈페이지로 이동");
 	    	return "home.tiles";
 		}
-		
 		//관리자메인 페이지로 이동
 		return "admin/home";
 	}

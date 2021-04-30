@@ -47,11 +47,10 @@ public class CommonUtil {
 	@Autowired
 	private EgovMessageSource egovMessageSource;
 	
-	//private static final Logger logger = LoggerFactory.getLogger(SimpleLog.class);
-	private static Logger logger = Logger.getLogger(SimpleLog.class);
+	private Logger logger = Logger.getLogger(SimpleLog.class);
 	
-	//스프링시큐리티 권한 체크 X, 개발자 임의로 만든 권한 체크
-	//로그인 인증+권한 체크 1개 메서드로 처리 ==> AdminController에서 관리자 권한 체크 때문에 생성
+	//스프링시큐리티 권한체크X, 개발자 임의로 만든 권한체크 입니다.(아래)
+	//로그인 인증+권한 체크 1개 메서드로 처리(아래) AdminController에서 관리자 권한 체크때문에 생성.
 	//기존전자정부에서 List<String>를 사용한 이유 ROLE_ADMIN,ROLE_USER 권한이 2개 이상일수 있습니다
 	public Boolean getAuthorities() throws Exception {
 		Boolean authority = Boolean.FALSE;
@@ -68,9 +67,8 @@ public class CommonUtil {
 		//여기까지 true값을 가져오면, 관리자라고 명시.
 		return authority;
 	}
-	
-	//스프링시큐리티 권한 체크
-	//EgovUserDetailHelper클래스에 있는 매소드를 복사해서 CommonUtil클래스에 가져다가 사용
+	//스프링시큐리티 권한체크(아래)
+	//EgovUserDetailHelper클래스에 있는 매서드를 복사해서 CommonUtil클래스에 가져다가 사용
 	private List<String> getAuthorities(String string) {
 		List<String> listAuth = new ArrayList<String>();
 		if (EgovObjectUtil.isNull((LoginVO) RequestContextHolder.getRequestAttributes().getAttribute("LoginVO", RequestAttributes.SCOPE_SESSION))) {
@@ -92,7 +90,6 @@ public class CommonUtil {
 		*/
 		return listAuth;
 	}
-		
 	
 	/**
 	 * 기존 로그인 처리는 egov것 그대로 사용하고,
@@ -107,18 +104,18 @@ public class CommonUtil {
 		boolean loginPolicyYn = true;
 
 		if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("") && loginPolicyYn) {
-			
-			request.getSession().setAttribute("LoginVO", resultVO);//전자정부 인증 세션발생.
-			//로그인 성공시 스프링 시큐리티 사용으로 주석처리 
+			//로그인 성공시
+			request.getSession().setAttribute("LoginVO", resultVO);
+			//로그인 성공후 관리자그룹일때 관리자 세션 ROLE_ADMIN명 추가
+			//스프링 시큐리티 사용X, 개발자 임의로 생성
 			/*
-			//로그인 성공후 관리자그룹일때 관리자 세션 ROLE_ADMIN명 권한 추가 
 			LoginVO sessionLoginVO = (LoginVO) RequestContextHolder.getRequestAttributes().getAttribute("LoginVO", RequestAttributes.SCOPE_SESSION);
 			EmployerInfoVO memberVO = memberService.viewMember(sessionLoginVO.getId());
 			if( "GROUP_00000000000000".equals(memberVO.getGROUP_ID()) ) {
 				request.getSession().setAttribute("ROLE_ADMIN", memberVO.getGROUP_ID());
 			}
 			*/
-			//*스프링 시큐리티 연동 추가 시작
+			//스프링 시큐리티 연동 추가
 			UsernamePasswordAuthenticationFilter springSecurity = null;
 			ApplicationContext act = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getSession().getServletContext());
 			Map<String,UsernamePasswordAuthenticationFilter> beans = act.getBeansOfType(UsernamePasswordAuthenticationFilter.class);
@@ -130,24 +127,23 @@ public class CommonUtil {
 						request.getServletContext().getContextPath() + "/egov_security_login", "POST"));
 			} else {
 				//throw new IllegalStateException("No AuthenticationProcessingFilter");
-				return "forward:/tiles/home.do";//context-security.xml에서 bean설정 없을 때
+				return "forward:/tiles/home.do";//context-security.xml에서 bean설정없을때
 			}
-			//false이면 chain 처리 되지 않음.
+			//false이면 chain 처리 되지 않음(아래)
 			springSecurity.setContinueChainBeforeSuccessfulAuthentication(false); 
-			//set으로 username과 password를 처리 context-security.xml파일의 ? 변수 저장
+			//set으로 username과 password를 처리 context-security.xml파일의 ? 변수 저장(아래)
 			springSecurity.doFilter(new RequestWrapperForSecurity(request, resultVO.getId(), resultVO.getPassword()), response, null);
-	    	
-			//List<String> authorities = EgovUserDetailsHelper.getAuthorities();
+			
+	    	//List<String> authorities = EgovUserDetailsHelper.getAuthorities();
 	    	List<String> authorities = getAuthorities("EgovUserDetailsHelper is Not use");
-			// 1. authorites 에  권한이 있는지 체크 TRUE/FALSE
+	    	// 1. authorites 에  권한이 있는지 체크 TRUE/FALSE
 	    	logger.debug("디버그:" + authorities.contains("ROLE_ADMIN"));
 	    	logger.debug("디버그:" + authorities.contains("ROLE_USER"));
 	    	logger.debug("디버그:" +authorities.contains("ROLE_ANONYMOUS"));
-			//위 값을 이용해서 세션을 발생.
+			//위 값을 이용해서 세션을 발생 시킵니다.
 	    	if(authorities.contains("ROLE_ADMIN")) {
 	    		request.getSession().setAttribute("ROLE_ADMIN", true);
 	    	}
-	    	
 			return "forward:/tiles/home.do";//변경2 NEW홈으로 이동
 		} else {
 			//로그인 실패시
@@ -156,7 +152,6 @@ public class CommonUtil {
 		}
 
 	}
-	
 	
 	/**
      * XSS 방지 처리. 자바스크립트 코드를 실행하지 못하는 특수문자로 replace(교체)하는내용
